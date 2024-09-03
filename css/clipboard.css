@@ -1,0 +1,22 @@
+/* Clipboard */
+
+.clipboard {
+    color: #A6ACAF;
+    background-color: #666;
+    border: none;
+    border-radius: 4px;
+}
+
+.clipboard:hover {
+    background-color: #AAA;
+    color: white;
+}
+
+.clipboard:active {
+    background-color: #818181;
+}
+
+.clipboard-input {
+    background-color: #818181;
+    color: lightgray;
+}

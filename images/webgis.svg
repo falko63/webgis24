@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="119.99984mm"
+   height="120.00647mm"
+   viewBox="0 0 119.99984 120.00647"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="WebGIS.svg"
+   inkscape:version="1.2 (dc2aedaf03, 2022-05-15)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.4292862"
+     inkscape:cx="124.88751"
+     inkscape:cy="277.4112"
+     inkscape:window-width="1920"
+     inkscape:window-height="1028"
+     inkscape:window-x="1913"
+     inkscape:window-y="-6"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="139.31178"
+       y="322.685"
+       width="141.14951"
+       height="200.49879"
+       id="rect7918" />
+    <rect
+       x="139.31178"
+       y="322.685"
+       width="141.14951"
+       height="200.49879"
+       id="rect7918-2" />
+    <rect
+       x="139.31178"
+       y="322.685"
+       width="141.14951"
+       height="200.49879"
+       id="rect7918-2-9" />
+    <rect
+       x="139.31178"
+       y="322.685"
+       width="141.14951"
+       height="200.49879"
+       id="rect7918-2-99" />
+    <rect
+       x="139.31178"
+       y="322.685"
+       width="141.14951"
+       height="200.49879"
+       id="rect7918-2-8" />
+    <rect
+       x="139.31178"
+       y="322.685"
+       width="141.14951"
+       height="200.49879"
+       id="rect7918-2-8-8" />
+  </defs>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-29.459026,-60.311687)">
+    <rect
+       style="fill:#e51400;fill-opacity:1;stroke-width:0.264583"
+       id="rect61"
+       width="40"
+       height="60"
+       x="29.477432"
+       y="60.311687" />
+    <rect
+       style="fill:#058605;fill-opacity:1;stroke-width:0.264583"
+       id="rect61-2"
+       width="40"
+       height="60"
+       x="69.459267"
+       y="60.317497" />
+    <rect
+       style="fill:#aa00ff;fill-opacity:1;stroke-width:0.264583"
+       id="rect61-4"
+       width="40"
+       height="60"
+       x="109.45887"
+       y="60.33857" />
+    <rect
+       style="fill:#0050ef;fill-opacity:1;stroke-width:0.264583"
+       id="rect61-8"
+       width="40"
+       height="60"
+       x="29.459026"
+       y="120.29127" />
+    <rect
+       style="fill:#f1a30b;fill-opacity:1;stroke-width:0.264583"
+       id="rect61-2-6"
+       width="40"
+       height="60"
+       x="69.474113"
+       y="120.29708" />
+    <rect
+       style="fill:#01abaa;fill-opacity:1;stroke-width:0.264583"
+       id="rect61-4-8"
+       width="40"
+       height="60"
+       x="109.45298"
+       y="120.31816" />
+    <g
+       aria-label="W"
+       transform="matrix(0.26458333,0,0,0.26458333,-5.9476223,-20.309088)"
+       id="text7916"
+       style="font-size:166.299px;white-space:pre;shape-inside:url(#rect7918);fill:#ffffff">
+      <path
+         d="m 208.98268,431.00518 -12.4237,49.04521 H 169.11315 L 139.3125,356.13815 h 36.62151 l 9.41928,40.43794 10.47488,-40.43794 h 25.65942 l 10.96209,40.43794 9.33808,-40.43794 h 36.2155 L 249.74543,480.05039 H 222.2996 Z"
+         style="font-family:'Gill Sans Ultra Bold Condensed';-inkscape-font-specification:'Gill Sans Ultra Bold Condensed, '"
+         id="path9732" />
+    </g>
+    <g
+       aria-label="E"
+       transform="matrix(0.26458333,0,0,0.26458333,41.159087,-20.303278)"
+       id="text7916-1"
+       style="font-size:166.299px;white-space:pre;shape-inside:url(#rect7918-2);display:inline;fill:#ffffff">
+      <path
+         d="m 184.86608,448.95053 h 32.64268 v 31.09986 H 147.59497 V 356.13815 h 69.91379 v 31.09987 h -32.64268 v 15.34692 h 22.81739 v 31.09987 h -22.81739 z"
+         style="font-family:'Gill Sans Ultra Bold Condensed';-inkscape-font-specification:'Gill Sans Ultra Bold Condensed, '"
+         id="path9783" />
+    </g>
+    <g
+       aria-label="B"
+       transform="matrix(0.26458333,0,0,0.26458333,78.806154,-20.282206)"
+       id="text7916-1-6"
+       style="font-size:166.299px;white-space:pre;shape-inside:url(#rect7918-2-9);display:inline;fill:#ffffff">
+      <path
+         d="m 206.79027,480.05039 h -59.1953 V 356.13815 h 45.06638 q 15.75293,0 23.06099,2.84203 7.38926,2.84202 12.2613,11.12449 4.95325,8.28247 4.95325,20.13777 0,10.23129 -2.59843,15.91533 -2.51722,5.68405 -8.36367,11.2057 6.98326,5.84645 10.15009,12.0989 3.16683,6.25245 3.16683,16.80854 0,15.34693 -7.79527,24.60381 -7.79527,9.17567 -20.70617,9.17567 z m -20.94978,-98.98363 h -0.97441 v 24.11661 h 0.97441 q 6.00885,0 8.60727,-2.67963 2.59842,-2.67962 2.59842,-8.93207 0,-6.98326 -2.51722,-9.74408 -2.43602,-2.76083 -8.68847,-2.76083 z m -0.3248,45.06638 h -0.64961 v 26.63383 h 1.13681 q 6.49606,0 9.17568,-2.84203 2.67962,-2.84202 2.67962,-9.82528 0,-7.79527 -2.67962,-10.88089 -2.67962,-3.08563 -9.66288,-3.08563 z"
+         style="font-family:'Gill Sans Ultra Bold Condensed';-inkscape-font-specification:'Gill Sans Ultra Bold Condensed, '"
+         id="path9786" />
+    </g>
+    <g
+       aria-label="G"
+       transform="matrix(0.26458333,0,0,0.26458333,-0.53841686,39.756429)"
+       id="text7916-1-2"
+       style="font-size:166.299px;white-space:pre;shape-inside:url(#rect7918-2-99);display:inline;fill:#ffffff">
+      <path
+         d="m 230.58207,480.2128 h -0.48721 l -30.61265,1.29921 q -17.94536,0 -26.71503,-4.38484 -8.76967,-4.38484 -15.42813,-14.21012 -6.57725,-9.90648 -9.41928,-21.59938 -2.76082,-11.6929 -2.76082,-24.1166 0,-28.58264 12.99211,-45.87839 13.07331,-17.29574 34.18549,-17.29574 9.82528,0 20.62497,4.46603 10.88089,4.38484 19.81296,12.26131 l -18.10775,37.27111 q -10.71849,-7.95767 -20.13777,-7.95767 -6.41485,0 -10.39368,4.62844 -3.89764,4.62844 -3.89764,12.1801 0,15.91534 12.26131,15.91534 h 0.8932 v -19.40696 h 37.18992 z"
+         style="font-family:'Gill Sans Ultra Bold Condensed';-inkscape-font-specification:'Gill Sans Ultra Bold Condensed, '"
+         id="path9789" />
+    </g>
+    <g
+       aria-label="I"
+       transform="matrix(0.26458333,0,0,0.26458333,45.449319,39.676306)"
+       id="text7916-1-1"
+       style="font-size:166.299px;white-space:pre;shape-inside:url(#rect7918-2-8);display:inline;fill:#ffffff">
+      <path
+         d="M 185.02848,480.05039 H 147.75737 V 356.13815 h 37.27111 z"
+         style="font-family:'Gill Sans Ultra Bold Condensed';-inkscape-font-specification:'Gill Sans Ultra Bold Condensed, '"
+         id="path9792" />
+    </g>
+    <g
+       aria-label="S"
+       transform="matrix(0.26458333,0,0,0.26458333,81.797331,39.729612)"
+       id="text7916-1-1-1"
+       style="font-size:166.299px;white-space:pre;shape-inside:url(#rect7918-2-8-8);display:inline;fill:#ffffff">
+      <path
+         d="m 149.78739,431.32999 q 3.89763,8.93207 9.82528,14.37252 5.92765,5.44044 11.12449,5.44044 2.84203,0 4.54724,-1.94881 1.78642,-1.94882 1.78642,-5.03445 0,-2.92322 -1.29921,-5.03444 -1.29921,-2.19242 -3.97884,-3.81643 l -9.01327,-5.68405 q -9.82529,-6.00885 -14.29132,-13.96652 -4.38484,-7.95766 -4.38484,-19.56936 0,-42.06195 40.43794,-42.06195 18.18895,0 33.77948,8.44487 l -9.33808,39.05753 q -4.22243,-8.85088 -9.74408,-13.64172 -5.52164,-4.79084 -11.20569,-4.79084 -2.92323,0 -4.70964,1.78642 -1.78642,1.70521 -1.78642,4.54723 0,3.73524 2.27362,6.00885 2.35482,2.27362 11.0433,7.30807 9.01327,5.03444 13.96651,9.58168 4.95325,4.54723 7.87647,11.44929 2.92322,6.82086 2.92322,16.32134 0,41.81835 -40.60034,41.81835 -20.86857,0 -38.40792,-9.17568 z"
+         style="font-family:'Gill Sans Ultra Bold Condensed';-inkscape-font-specification:'Gill Sans Ultra Bold Condensed, '"
+         id="path9795" />
+    </g>
+  </g>
+</svg>

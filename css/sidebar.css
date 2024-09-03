@@ -1,0 +1,90 @@
+/* Map */
+.main {
+    transition: margin-left .5s;
+    margin-left: 60px;
+    padding: 0;
+}
+
+/* Menü */
+#logo {
+    width: 60px;
+}
+
+.sidebar {
+    height: 100%;
+    width: 60px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #111111;
+    /* horizontal herausragende Inhalte werden abgeschnitten */
+    overflow-x: hidden;
+}
+
+.sidebar button {
+    background-color: black;
+    /* padding: 10px 8px 6px 16px; */
+    padding: 10px;
+	/*margin: 3px;*/
+    text-decoration: none;
+    font-size: 20px;
+    color: #818181;
+    display: block;
+	border: none;
+	width: 100%;
+}
+
+.sidebar button:hover {
+    color: #f1f1f1;
+}
+
+/* siehe layerpanles.js */
+ul.layer-ul {  /* Layer einer Layergruppe */
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    padding-left: 1em;
+}
+ul.layer-ul li {
+    margin-bottom: 0.4em;
+}
+
+h2.layer-h2 {  /* Layergroup-Überschrift */
+    font-size: 1.2em;
+}
+
+/* Infobar */
+.infobar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: #666666;
+    /* horizontal herausragende Inhalte werden abgeschnitten */
+    overflow-x: hidden;
+    transition: .5s;
+    padding-top: 0;
+    margin-left: 60px;
+    color: #f1f1f1;
+}
+
+.infobar h1 {
+    font-size: 1.5em;
+    border-bottom: 2px solid #f1f1f1;
+    margin-right: 20px;
+}
+
+/*
+@media screen and (max-width: 450px) {
+    .sidebar {
+        padding-top: 15px;
+    }
+
+    .sidebar a {
+        font-size: 14px;
+    }
+}
+*/

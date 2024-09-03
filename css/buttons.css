@@ -1,0 +1,60 @@
+/* Buttons */
+
+.btn {
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    border: 1px solid transparent;
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    line-height: 1.5;
+    border-radius: .2rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #6C757D;
+    border-color: #6C757D;
+}
+
+.btn-success {
+    color: #fff;
+    background-color: #28A745;
+    border-color: #28A745;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #DC3545;
+    border-color: #DC3545;
+}
+
+.btn-warning {
+    color: #fff;
+    background-color: #FFC107;
+    border-color: #FFC107;
+}
+
+.btn-info {
+    color: #fff;
+    background-color: #17A2B8;
+    border-color: #17A2B8;
+}
+
+.waypoints {
+    width: 275px;
+    margin-bottom: 10px;;
+}
+
+.route-value-table {
+    margin-top: 10px;;
+}

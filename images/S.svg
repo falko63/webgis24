@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:ns="&amp;ns_sfw;"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Livello_1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 100 100"
+   xml:space="preserve"
+   sodipodi:docname="S.svg"
+   width="100"
+   height="100"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15, custom)"><defs
+   id="defs1444" /><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="2880"
+   inkscape:window-height="1526"
+   id="namedview1442"
+   showgrid="false"
+   fit-margin-top="0"
+   fit-margin-left="0"
+   fit-margin-right="0"
+   fit-margin-bottom="0"
+   inkscape:zoom="1.47"
+   inkscape:cx="250"
+   inkscape:cy="250"
+   inkscape:window-x="-11"
+   inkscape:window-y="-11"
+   inkscape:window-maximized="1"
+   inkscape:current-layer="Livello_1" />
+<style
+   type="text/css"
+   id="style1431">
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:#008D4F;}
+	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;}
+</style>
+<metadata
+   id="metadata1433">
+	<ns:sfw>
+		<ns:slices />
+		<ns:sliceSourceBounds
+   bottomLeftOrigin="true"
+   height="500"
+   width="500"
+   x="0"
+   y="0" />
+	</ns:sfw>
+<rdf:RDF><cc:Work
+     rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+       rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata>
+<g
+   id="g1439"
+   transform="scale(0.2)">
+	<path
+   class="st0"
+   d="M 500,250 C 500,112.1 387.9,0 250,0 112.1,0 0,112.1 0,250 0,387.9 112.1,500 250,500 387.9,500 500,387.9 500,250"
+   id="path1435" />
+	<path
+   class="st1"
+   d="m 414.1,316.5 c 0,60.6 -58.8,131.1 -157.8,131.1 -55.2,0 -118.9,-24.8 -153.7,-56 v -78.7 c 33,47.5 93.1,84.1 153.7,84.1 37.1,0 66.9,-21.2 66.9,-43.9 0,-85.4 -223.8,-32.6 -223.8,-179.9 0,-77.3 75.5,-118.9 143.3,-118.9 56.5,0 107.1,18.5 147.4,49.7 v 65.6 C 355.3,132 302.9,99 241.4,99 c -34.8,0 -54.7,18.5 -54.7,40.2 0,91.4 227.4,27.2 227.4,177.3"
+   id="path1437" />
+</g>
+</svg>
