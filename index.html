@@ -2,96 +2,129 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="images/webgis.svg" type="image/svg+xml">
+    <link rel="icon" href="images/webgis.svg" type="image/svg+xml" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WebGIS 2024</title>
   </head>
   <body>
+    <!-- Sidebar -->
     <div class="sidebar">
-      <img id="logo" src="images/webgis.svg" width="60" height="60">
-      <button onclick="infoCloseAll()"><i class="fa-solid fa-house"></i></button>
-      <button onclick="info('baselayer')"><i class="fa-solid fa-map"></i></button>
-      <button onclick="info('coordinates')"><i class="fa-solid fa-circle-info"></i></button>
-      <button onclick="info('stadtrad')"><i class="fa-solid fa-person-biking"></i></button>
-      <button onclick="info('routing')"><i class="fa-solid fa-car"></i></button>
-      <button onclick="info('location')"><i class="fa-solid fa-location-crosshairs"></i></button>
+      <img id="logo" src="images/webgis.svg" width="60" height="60" />
+      <button onclick="infoCloseAll()">
+        <i class="fa-solid fa-house"></i>
+      </button>
+      <button onclick="info('baselayer')">
+        <i class="fa-solid fa-map"></i>
+      </button>
+      <button onclick="info('coordinates')">
+        <i class="fa-solid fa-circle-info"></i>
+      </button>
+      <button onclick="info('routing')">
+        <i class="fa-solid fa-car"></i>
+      </button>
+      <button onclick="info('location')">
+        <i class="fa-solid fa-location-crosshairs"></i>
+      </button>
+      <!-- Zeichen-Button -->
+      <button onclick="info('draw')">
+        <i class="fa-solid fa-pencil"></i> Zeichnen
+      </button>
     </div>
 
+    <!-- Infobar für Zeichnen -->
+    <div id="draw" class="infobar">
+      <h1>Zeichnen</h1>
+      <p>Zeichne ein Gebiet auf der Karte.</p>
+    </div>
+
+    <!-- Infobar für Basiskarten -->
     <div id="baselayer" class="infobar"></div>
 
+    <!-- Infobar für Geolocation -->
     <div id="location" class="infobar">
       <h1>Geolocation</h1>
       <label for="track">
         Track position
-        <input id="track" type="checkbox">
+        <input id="track" type="checkbox" />
       </label>
       <table>
-        <tr><td>Position accurracy:</td><td><code id="accuracy"></code></td></tr>
-        <tr><td>Altitude:</td><td><code id="altitude"></code></td></tr>
-        <tr><td>Altitude accurracy:</td><td><code id="altitudeAccuracy"></code></td></tr>
-        <tr><td>Heading:</td><td><code id="heading"></code></td></tr>
-        <tr><td>Speed:</td><td><code id="speed"></code></td></tr>
+        <tr>
+          <td>Position accurracy:</td>
+          <td><code id="accuracy"></code></td>
+        </tr>
+        <tr>
+          <td>Altitude:</td>
+          <td><code id="altitude"></code></td>
+        </tr>
+        <tr>
+          <td>Altitude accurracy:</td>
+          <td><code id="altitudeAccuracy"></code></td>
+        </tr>
+        <tr>
+          <td>Heading:</td>
+          <td><code id="heading"></code></td>
+        </tr>
+        <tr>
+          <td>Speed:</td>
+          <td><code id="speed"></code></td>
+        </tr>
       </table>
       <div id="location-info"></div>
     </div>
 
+    <!-- Infobar für Routing -->
     <div id="routing" class="infobar">
       <h1>Routing</h1>
       <table>
-        <tr><td>Longitude:</td><td id="mouseLon"></td></tr>
-        <tr><td>Latitude:</td><td id="mouseLat"></td></tr>
+        <tr>
+          <td>Longitude:</td>
+          <td id="mouseLon"></td>
+        </tr>
+        <tr>
+          <td>Latitude:</td>
+          <td id="mouseLat"></td>
+        </tr>
       </table>
       <select id="waypoints" size="5" class="waypoints"></select>
       <div>
-        <button id="waypoint-add" type="button" class="btn btn-primary" 
-          title="add waypoint"><i class="fa fa-fw fa-plus-square"></i></button>
-        <button id="waypoint-remove" type="button" class="btn btn-primary" 
-          title="remove waypoint"><i class="fa fa-fw fa-minus-square"></i></button>
-        <button id="waypoint-up" type="button" class="btn btn-success"
-          title="move waypoint up"><i class="fa fa-fw fa-arrow-circle-up"></i></button>
-        <button id="waypoint-down" type="button" class="btn btn-success" 
-          title="move waypoint down"><i class="fa fa-fw fa-arrow-circle-down"></i></button>
-        <button id="route-get" type="button" class="btn btn-danger" 
-          title="get route"><i class="fa fa-fw fa-download"></i></button>
-        <button id="route-zoom" type="button" class="btn btn-warning" 
-          title="zoom to route"><i class="fa fa-fw fa-search-plus"></i></button>
-        <button id="route-remove" type="button" class="btn btn-info" 
-          title="remove route"><i class="fa fa-fw fa-times"></i></button>
-        </div>
-        <table class="route-value-table">
-          <tr><td>Distance:</td><td id="distance"></td><td> km</td></tr>
-          <tr><td>Time:</td><td id="time"></td><td> h</td></tr>
-        </table>
-        <div id="route-info"></div>
-    </div>
-
-    <div id="stadtrad" class="infobar">
-      <h1>Stadtrad</h1>
-      <div class="auswahl">
-        <input type="radio" id="stadtrad_none" checked name="stadtrad" value="nop"> nix
-        <input type="radio" id="stadtrad_draw" name="stadtrad" value="create"> Erzeugen
-        <input type="radio" id="stadtrad_modify" name="stadtrad" value="update"> Ändern
-        <input type="radio" id="stadtrad_delete" name="stadtrad" value="delete"> Löschen
+        <button id="waypoint-add" type="button" class="btn btn-primary">
+          <i class="fa fa-fw fa-plus-square"></i>
+        </button>
+        <button id="waypoint-remove" type="button" class="btn btn-primary">
+          <i class="fa fa-fw fa-minus-square"></i>
+        </button>
+        <button id="waypoint-up" type="button" class="btn btn-success">
+          <i class="fa fa-fw fa-arrow-circle-up"></i>
+        </button>
+        <button id="waypoint-down" type="button" class="btn btn-success">
+          <i class="fa fa-fw fa-arrow-circle-down"></i>
+        </button>
+        <button id="route-get" type="button" class="btn btn-danger">
+          <i class="fa fa-fw fa-download"></i>
+        </button>
+        <button id="route-zoom" type="button" class="btn btn-warning">
+          <i class="fa fa-fw fa-search-plus"></i>
+        </button>
+        <button id="route-remove" type="button" class="btn btn-info">
+          <i class="fa fa-fw fa-times"></i>
+        </button>
       </div>
-      <form id="formStadtrad" class="formStadtrad">
-        <label for="stadtrad_id">ID: </label>
-          <input id="stadtrad_id" type="number" min="1" max="9999">
-        <br>
-        <label for="stadtrad_station">Station: </label>
-          <input id="stadtrad_station" type="text" size="25" placeholder="Ort/Straßenkreuzung">
-        <br>
-        <label for="stadtrad_lat">Latitude: </label>
-          <input id="stadtrad_lat" type="number" min="-90" max="90">
-        <br>
-        <label for="stadtrad_lon">Longitude: </label>
-          <input id="stadtrad_lon" type="number" min="-180" max="180">
-        <div>
-          <button id="stadtrad_btn" type="button" class="btn btn-primary" title="OK">Speichern</button>
-        </div>
-      </form>
-      <div id="stadtrad_message"></div>
+      <table class="route-value-table">
+        <tr>
+          <td>Distance:</td>
+          <td id="distance"></td>
+          <td>km</td>
+        </tr>
+        <tr>
+          <td>Time:</td>
+          <td id="time"></td>
+          <td>h</td>
+        </tr>
+      </table>
+      <div id="route-info"></div>
     </div>
 
+    <!-- Infobar für Koordinaten -->
     <div id="coordinates" class="infobar">
       <h1>Koordinaten</h1>
       <table class="coords">
@@ -102,8 +135,22 @@
         </tr>
         <tr>
           <td>Clicked at:</td>
-          <td><button onclick="copy2clipboard('mouseCoord4326ClickedAt')" class="clipboard"><i class="fa-solid fa-clipboard"></i></button></td>
-          <td><input type="text" id="mouseCoord4326ClickedAt" class="clipboard-input" disabled></td>
+          <td>
+            <button
+              onclick="copy2clipboard('mouseCoord4326ClickedAt')"
+              class="clipboard"
+            >
+              <i class="fa-solid fa-clipboard"></i>
+            </button>
+          </td>
+          <td>
+            <input
+              type="text"
+              id="mouseCoord4326ClickedAt"
+              class="clipboard-input"
+              disabled
+            />
+          </td>
         </tr>
         <tr>
           <td>Web Mercator:</td>
@@ -112,45 +159,91 @@
         </tr>
         <tr>
           <td>Clicked at:</td>
-          <td><button onclick="copy2clipboard('mouseCoord3857ClickedAt')" class="clipboard"><i class="fa-solid fa-clipboard"></i></button></td>
-          <td><input type="text" id="mouseCoord3857ClickedAt" class="clipboard-input" disabled></td>
+          <td>
+            <button
+              onclick="copy2clipboard('mouseCoord3857ClickedAt')"
+              class="clipboard"
+            >
+              <i class="fa-solid fa-clipboard"></i>
+            </button>
+          </td>
+          <td>
+            <input
+              type="text"
+              id="mouseCoord3857ClickedAt"
+              class="clipboard-input"
+              disabled
+            />
+          </td>
         </tr>
         <tr>
           <td>Zoom</td>
-          <td><button onclick="copy2clipboard('zoom')" class="clipboard"><i class="fa-solid fa-clipboard"></i></button></td>
-          <td><input type="text" id="zoom" class="clipboard-input" disabled></td>
+          <td>
+            <button onclick="copy2clipboard('zoom')" class="clipboard">
+              <i class="fa-solid fa-clipboard"></i>
+            </button>
+          </td>
+          <td>
+            <input type="text" id="zoom" class="clipboard-input" disabled />
+          </td>
         </tr>
         <tr>
           <td>Resolution:</td>
-          <td><button onclick="copy2clipboard('resolution')" class="clipboard"><i class="fa-solid fa-clipboard"></i></button></td>
-          <td><input type="text" id="resolution" class="clipboard-input" disabled></td>
+          <td>
+            <button onclick="copy2clipboard('resolution')" class="clipboard">
+              <i class="fa-solid fa-clipboard"></i>
+            </button>
+          </td>
+          <td>
+            <input
+              type="text"
+              id="resolution"
+              class="clipboard-input"
+              disabled
+            />
+          </td>
         </tr>
         <tr>
           <td>BBOX:</td>
-          <td><button onclick="copy2clipboard('bbox')" class="clipboard"><i class="fa-solid fa-clipboard"></i></button></td>
-          <td><input type="text" id="bbox" class="clipboard-input" disabled></td>
+          <td>
+            <button onclick="copy2clipboard('bbox')" class="clipboard">
+              <i class="fa-solid fa-clipboard"></i>
+            </button>
+          </td>
+          <td>
+            <input type="text" id="bbox" class="clipboard-input" disabled />
+          </td>
         </tr>
         <tr>
           <td>Center:</td>
-          <td><button onclick="copy2clipboard('center')" class="clipboard"><i class="fa-solid fa-clipboard"></i></button></td>
-          <td><input type="text" id="center" class="clipboard-input" disabled></td>
+          <td>
+            <button onclick="copy2clipboard('center')" class="clipboard">
+              <i class="fa-solid fa-clipboard"></i>
+            </button>
+          </td>
+          <td>
+            <input type="text" id="center" class="clipboard-input" disabled />
+          </td>
         </tr>
       </table>
     </div>
 
-
+    <!-- Popup -->
     <div id="popup" class="ol-popup">
       <a href="#" id="popup-closer" class="ol-popup-closer"></a>
       <div id="popup-content"></div>
-      <button type="button" class="btn btn-primary" id="popupOk">Ok</button>&nbsp;
-      <button type="button" class="btn btn-primary" id="popupCancel">Abbruch</button>
+      <button type="button" class="btn btn-primary" id="popupOk">Ok</button>
+      <button type="button" class="btn btn-primary" id="popupCancel">
+        Abbruch
+      </button>
     </div>
 
-
+    <!-- Hauptkarte -->
     <div id="main" class="main">
       <div id="map" class="map"></div>
     </div>
 
+    <!-- Script -->
     <script type="module" src="./main.js"></script>
   </body>
 </html>
