@@ -1,13 +1,3 @@
-/*
-export default {
-  build: {
-    sourcemap: true,
-    target: 'esnext',
-  }
-}
-*/
-
-
 import { defineConfig } from "vite";
 
 export default defineConfig({
@@ -16,21 +6,21 @@ export default defineConfig({
   build: {
     emptyOutDir: true,
     outDir: "./dist",
-    target: 'esnext',
-    /* rollupOptions: {
+    target: "esnext",
+    sourcemap: true, // Aktiviere die Generierung von Sourcemaps
+    rollupOptions: {
       output: {
         assetFileNames: (asset) => {
           if (
-            ['.jpg', '.png', '.svg', '.avif', '.webp'].some((ext) =>
-              asset.name?.endsWith(ext),
+            [".jpg", ".png", ".svg", ".avif", ".webp"].some((ext) =>
+              asset.name?.endsWith(ext)
             )
           ) {
-            return 'images/[name]-[hash][extname]';
+            return "images/[name]-[hash][extname]";
           }
-          return 'assets/[name]-[hash][extname]';  // for other assets like fonts and audios etc.
+          return "assets/[name]-[hash][extname]"; // für andere Assets wie Schriftarten und Audio usw.
         },
       },
-    } */
-  }
+    },
+  },
 });
-

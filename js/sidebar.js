@@ -1,46 +1,59 @@
 import { enableDraw } from "./draw.js"; // Importiere die Zeichenfunktion
+import { map } from "./map.js"; // Stelle sicher, dass wir auf die Karte zugreifen können
 
 let openBar = undefined;
+let drawInteraction = null; // Halte die Interaktion, um sie zu entfernen, wenn die Sidebar geschlossen wird
 
-const infobar_open_width = 350;
-const infobar_close_width = 60;
-const infobar_padding_left = 20;
-const infobar_total =
-  infobar_open_width + infobar_close_width + infobar_padding_left;
+const infobar_open_width = 250; // Breite der Sidebar
+const infobar_close_width = 60; // Breite der Sidebar-Buttons
 
 function info(bar) {
-  if (openBar == undefined) {
-    infoOpen(bar);
-  } else if (openBar == bar) {
+  if (openBar === bar) {
+    // Wenn die gleiche Sidebar erneut geklickt wird, schließe sie
     infoCloseAll();
-  } else if (openBar != bar) {
+    return;
+  } else if (openBar !== undefined) {
+    // Schließe die aktuelle offene Sidebar, bevor die neue geöffnet wird
     infoCloseAll();
-    infoOpen(bar);
   }
+
+  // Öffne die neue Sidebar
+  infoOpen(bar);
 
   // Zeichenfunktion aktivieren, wenn der 'draw'-Button gewählt wurde
   if (bar === "draw") {
-    enableDraw(window.map); // Hier wird die Zeichenfunktion mit der Karte aktiviert
-    console.log("Zeichnen aktiviert");
+    if (drawInteraction === null) {
+      enableDraw(); // Zeichnen aktivieren
+      console.log("Zeichenfunktion aktiviert.");
+    }
   }
 }
 
-window.info = info; // Stelle sicher, dass die Funktion global verfügbar ist
+window.info = info; // Globale Funktion
 
 function infoOpen(bar) {
-  document.getElementById(bar).style.width = infobar_open_width + "px";
-  document.getElementById(bar).style.paddingLeft = infobar_padding_left + "px";
-  document.getElementById("main").style.marginLeft = infobar_total + "px";
+  document.getElementById(bar).classList.add("infobar_open"); // Sidebar öffnen
+  document.getElementById("main").classList.add("with-sidebar"); // Kartenbreite anpassen
   openBar = bar;
 }
 
 function infoCloseAll() {
+  // Schließe alle Sidebars
   let bars = document.getElementsByClassName("infobar");
   for (let bar of bars) {
-    bar.style.width = "0";
-    bar.style.paddingLeft = "0";
+    bar.classList.remove("infobar_open");
   }
-  document.getElementById("main").style.marginLeft = infobar_close_width + "px";
+
+  // Setze die Karte auf volle Breite zurück
+  document.getElementById("main").classList.remove("with-sidebar");
+
+  // Entferne die Zeicheninteraktion, wenn sie aktiv war
+  if (drawInteraction !== null) {
+    map.removeInteraction(drawInteraction);
+    drawInteraction = null;
+    console.log("Zeichenfunktion deaktiviert.");
+  }
+
   openBar = undefined;
 }
 

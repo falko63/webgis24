@@ -1,90 +1,93 @@
 /* Map */
 .main {
-    transition: margin-left .5s;
-    margin-left: 60px;
-    padding: 0;
+  transition: margin-left 0.5s ease;
+  margin-left: 60px; /* Platz für die Sidebar-Buttons */
+  padding: 0;
+  width: calc(100% - 60px); /* Die Karte nimmt die verbleibende Breite ein */
 }
 
-/* Menü */
-#logo {
-    width: 60px;
-}
-
+/* Sidebar */
 .sidebar {
-    height: 100%;
-    width: 60px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    background-color: #111111;
-    /* horizontal herausragende Inhalte werden abgeschnitten */
-    overflow-x: hidden;
+  height: 100%;
+  width: 60px; /* Sidebar-Buttons-Breite */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  background-color: #111111;
+  overflow-x: hidden;
+  transition: width 0.5s ease; /* Weicher Übergang beim Öffnen/Schließen */
 }
 
 .sidebar button {
-    background-color: black;
-    /* padding: 10px 8px 6px 16px; */
-    padding: 10px;
-	/*margin: 3px;*/
-    text-decoration: none;
-    font-size: 20px;
-    color: #818181;
-    display: block;
-	border: none;
-	width: 100%;
+  background-color: black;
+  padding: 10px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #818181;
+  display: block;
+  border: none;
+  width: 100%;
 }
 
 .sidebar button:hover {
-    color: #f1f1f1;
-}
-
-/* siehe layerpanles.js */
-ul.layer-ul {  /* Layer einer Layergruppe */
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    padding-left: 1em;
-}
-ul.layer-ul li {
-    margin-bottom: 0.4em;
-}
-
-h2.layer-h2 {  /* Layergroup-Überschrift */
-    font-size: 1.2em;
+  color: #f1f1f1;
 }
 
 /* Infobar */
 .infobar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    background-color: #666666;
-    /* horizontal herausragende Inhalte werden abgeschnitten */
-    overflow-x: hidden;
-    transition: .5s;
-    padding-top: 0;
-    margin-left: 60px;
-    color: #f1f1f1;
+  height: 100%;
+  width: 0; /* Die Sidebar beginnt geschlossen */
+  position: fixed;
+  top: 0;
+  left: 60px; /* Platz für die Sidebar-Buttons */
+  z-index: 2;
+  background-color: #666666;
+  overflow-x: hidden;
+  transition: width 0.5s ease; /* Weicher Übergang */
+  padding-top: 20px;
+  color: #f1f1f1;
+  overflow-y: auto;
+}
+
+.infobar_open {
+  width: 250px; /* Die Sidebar hat dieselbe Breite wie die anderen Menüs */
 }
 
 .infobar h1 {
-    font-size: 1.5em;
-    border-bottom: 2px solid #f1f1f1;
-    margin-right: 20px;
+  font-size: 1.5em;
+  border-bottom: 2px solid #f1f1f1;
+  margin-right: 20px;
 }
 
-/*
-@media screen and (max-width: 450px) {
-    .sidebar {
-        padding-top: 15px;
-    }
-
-    .sidebar a {
-        font-size: 14px;
-    }
+/* Kartenlayout anpassen, wenn die Sidebar offen ist */
+.main.with-sidebar {
+  margin-left: 310px; /* Sidebar (250px) + Sidebar-Buttons (60px) */
+  width: calc(100% - 310px); /* Karte füllt den verbleibenden Platz */
 }
-*/
+
+/* Gezeichnete Gebiete */
+#drawn-areas {
+  width: 20%; /* Gleiche Breite wie die Sidebar */
+  background-color: #666666; /* Gleiche Hintergrundfarbe wie Sidebar */
+  padding: 10px; /* Padding für Abstand */
+  color: #f1f1f1; /* Textfarbe wie in der Sidebar */
+}
+
+#areas-list {
+  color: black;
+  font-size: 16px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#areas-list li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #eeeeee; /* Hintergrund für Listenitems */
+  border: 1px solid #ccc; /* Leichte Umrandung */
+  border-radius: 5px; /* Runde Ecken */
+  word-wrap: break-word; /* Lange Wörter umbrechen */
+  box-sizing: border-box; /* Verhindert, dass Padding die Breite beeinflusst */
+}
