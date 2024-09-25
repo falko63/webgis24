@@ -1,12 +1,16 @@
-import { Draw } from "ol/interaction";
+import { Draw, Modify } from "ol/interaction";
 import { Vector as VectorSource } from "ol/source";
 import { Vector as VectorLayer } from "ol/layer";
-import { Style, Fill, Stroke, Text } from "ol/style"; // Für die Anpassung des Stils
-import { Overlay } from "ol"; // Für den Tooltip
-import { map } from "./map.js"; // Importiere die map-Instanz
+import { Style, Fill, Stroke, Text } from "ol/style";
+import { Overlay } from "ol";
+import Collection from "ol/Collection";
+import { map } from "./map.js";
 
 let areas = [];
-let drawSource = null; // Globale Variable für das Zeichnen der Quelle
+let drawSource = null;
+let modify = null;
+const MAX_AREA_HECTARES = 1000;
+let drawInteraction = null; // Zeichnen-Interaktion, um sie global verfügbar zu machen
 
 // Funktion zum Zeichnen von Polygonen
 export function enableDraw() {
@@ -31,42 +35,39 @@ export function enableDraw() {
     }),
   });
 
-  map.addLayer(drawLayer); // Füge den Layer zur Karte hinzu
+  map.addLayer(drawLayer);
 
-  const draw = new Draw({
+  drawInteraction = new Draw({
     source: drawSource,
     type: "Polygon",
   });
 
-  map.addInteraction(draw); // Füge die Zeicheninteraktion zur Karte hinzu
+  map.addInteraction(drawInteraction); // Speichert die Zeicheninteraktion
 
-  draw.on("drawend", function (event) {
+  drawInteraction.on("drawend", function (event) {
     const drawnFeature = event.feature;
     const area = drawnFeature.getGeometry().getArea();
-    const areaInHectares = area / 10000; // Umrechnung in Hektar
+    const areaInHectares = area / 10000;
 
     console.log("Fläche des Polygons in Hektar:", areaInHectares);
 
-    // Überprüfe, ob das Gebiet zu groß ist
-    if (areaInHectares > 1000) {
-      alert("Das Gebiet ist zu groß, bitte zeichne ein kleineres Gebiet.");
-
-      // Entferne das Polygon, wenn es zu groß ist
+    if (areaInHectares > MAX_AREA_HECTARES) {
+      alert(`Das Gebiet ist zu groß. Maximal ${MAX_AREA_HECTARES} Hektar.`);
       setTimeout(() => {
-        drawSource.removeFeature(drawnFeature); // Entferne das zu große Gebiet von der Karte
+        drawSource.removeFeature(drawnFeature);
         console.log("Zu großes Gebiet entfernt.");
-      }, 100); // Geringe Verzögerung, um sicherzustellen, dass die Karte aktualisiert wird
+      }, 100);
     } else {
       const coordinates = drawnFeature.getGeometry().getCoordinates()[0];
       const areaObject = {
         areaInHectares,
         coordinates,
         name: `Gebiet ${areas.length + 1}`,
-        feature: drawnFeature, // Speichere das Feature, um es später zu löschen
+        feature: drawnFeature,
       };
       areas.push(areaObject);
       console.log("Gezeichnetes Gebiet hinzugefügt:", areaObject);
-      updateSidebar(); // Sidebar aktualisieren
+      updateSidebar();
     }
   });
 
@@ -83,7 +84,6 @@ export function enableDraw() {
 
   map.addOverlay(overlay);
 
-  // Mousemove Event für den Tooltip
   map.on("pointermove", function (event) {
     map.forEachFeatureAtPixel(
       event.pixel,
@@ -102,48 +102,93 @@ export function enableDraw() {
       }
     );
 
-    // Tooltip ausblenden, wenn die Maus das Gebiet verlässt
     if (!map.hasFeatureAtPixel(event.pixel)) {
       tooltip.style.display = "none";
     }
   });
 }
 
-// Funktion zur Aktualisierung der Sidebar
+// Funktion zum Abrufen der Zeichnen-Interaktion
+export function getDrawInteraction() {
+  return drawInteraction; // Gib die Zeicheninteraktion zurück
+}
+
+// Funktion zur Aktivierung des Modify-Modus für ein Gebiet
+function enableModifyForFeature(feature) {
+  if (modify) {
+    map.removeInteraction(modify);
+  }
+
+  modify = new Modify({
+    features: new Collection([feature]), // Nur dieses Feature kann bearbeitet werden
+  });
+
+  map.addInteraction(modify);
+
+  modify.on("modifyend", function () {
+    const area = feature.getGeometry().getArea();
+    const areaInHectares = area / 10000; // Umrechnung in Hektar
+
+    // Überprüfen, ob das bearbeitete Gebiet zu groß ist
+    if (areaInHectares > MAX_AREA_HECTARES) {
+      alert(
+        `Das bearbeitete Gebiet ist zu groß. Maximal ${MAX_AREA_HECTARES} Hektar.`
+      );
+      modify.undo(); // Setzt die letzte Bearbeitung zurück, wenn die Fläche zu groß ist
+    } else {
+      // Suche das bearbeitete Gebiet und aktualisiere die Fläche
+      const foundArea = areas.find((areaObj) => areaObj.feature === feature);
+      if (foundArea) {
+        foundArea.areaInHectares = areaInHectares; // Aktualisiere die Fläche
+        updateSidebar(); // Aktualisiere die Sidebar, um die neue Fläche anzuzeigen
+      }
+
+      console.log("Polygon bearbeitet:", feature);
+    }
+  });
+}
+
+function deleteFeature(area) {
+  drawSource.removeFeature(area.feature);
+  areas = areas.filter((a) => a !== area);
+  updateSidebar();
+}
+
 function updateSidebar() {
-  console.log("Update der Sidebar wird aufgerufen"); // Debugging
   const areasList = document.getElementById("areas-list");
-  areasList.innerHTML = ""; // Leere die Liste
+  areasList.innerHTML = "";
 
   areas.forEach((area, index) => {
     const listItem = document.createElement("li");
 
-    // Gebietsnamen bearbeiten
     const input = document.createElement("input");
     input.type = "text";
     input.value = area.name;
     input.oninput = function () {
-      area.name = input.value; // Speichere den neuen Namen
+      area.name = input.value;
     };
 
-    // Löschen-Button
+    const modifyButton = document.createElement("button");
+    modifyButton.textContent = "Bearbeiten";
+    modifyButton.classList.add("btn", "btn-primary");
+    modifyButton.onclick = function () {
+      enableModifyForFeature(area.feature);
+    };
+
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Löschen";
+    deleteButton.classList.add("btn", "btn-danger");
     deleteButton.onclick = function () {
-      drawSource.removeFeature(area.feature); // Entferne das Feature von der Karte
-      areas = areas.filter((_, i) => i !== index); // Entferne das Gebiet aus der Liste
-      updateSidebar(); // Aktualisiere die Sidebar nach dem Löschen
+      deleteFeature(area);
     };
 
-    // Füge das Gebiet und die Bedienelemente hinzu
     listItem.appendChild(input);
+    listItem.appendChild(modifyButton);
     listItem.appendChild(deleteButton);
     listItem.appendChild(
       document.createTextNode(`: ${area.areaInHectares.toFixed(2)} Hektar`)
     );
 
-    areasList.appendChild(listItem); // Füge den Listeneintrag hinzu
+    areasList.appendChild(listItem);
   });
-
-  console.log("Aktuelle Liste der gezeichneten Gebiete:", areas);
 }

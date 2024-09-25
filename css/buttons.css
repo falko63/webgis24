@@ -1,60 +1,127 @@
-/* Buttons */
-
+/* Basis-Button-Styles */
 .btn {
-    display: inline-block;
-    font-weight: 400;
-    text-align: center;
-    vertical-align: middle;
-    user-select: none;
-    border: 1px solid transparent;
-    padding: .25rem .5rem;
-    font-size: .875rem;
-    line-height: 1.5;
-    border-radius: .2rem;
-    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.5rem 1rem; /* Größere Polsterung für bessere Sichtbarkeit */
+  font-size: 1rem; /* Etwas größere Schrift */
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  cursor: pointer;
 }
 
+.btn:hover {
+  filter: brightness(90%); /* Helle Buttons bei Hover leicht abdunkeln */
+}
+
+/* Farbige Buttons */
 .btn-primary {
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
 }
 
-.btn-secondary {
-    color: #fff;
-    background-color: #6C757D;
-    border-color: #6C757D;
-}
-
-.btn-success {
-    color: #fff;
-    background-color: #28A745;
-    border-color: #28A745;
+.btn-primary:hover {
+  background-color: #0056b3; /* Etwas dunkleres Blau bei Hover */
+  border-color: #0056b3;
 }
 
 .btn-danger {
-    color: #fff;
-    background-color: #DC3545;
-    border-color: #DC3545;
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333; /* Dunkleres Rot bei Hover */
+  border-color: #bd2130;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
 }
 
 .btn-warning {
-    color: #fff;
-    background-color: #FFC107;
-    border-color: #FFC107;
+  color: #fff;
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
 }
 
 .btn-info {
-    color: #fff;
-    background-color: #17A2B8;
-    border-color: #17A2B8;
+  color: #fff;
+  background-color: #17a2b8;
+  border-color: #17a2b8;
 }
 
-.waypoints {
-    width: 275px;
-    margin-bottom: 10px;;
+.btn-info:hover {
+  background-color: #117a8b;
+  border-color: #10707f;
 }
 
-.route-value-table {
-    margin-top: 10px;;
+.btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+/* Weitere Button-Styles für kleinere Buttons oder spezifische Anpassungen */
+.btn-small {
+  padding: 0.25rem 0.5rem; /* Kleinere Polsterung */
+  font-size: 0.875rem; /* Kleinere Schriftgröße */
+}
+
+.btn-large {
+  padding: 0.75rem 1.25rem; /* Größere Polsterung */
+  font-size: 1.25rem; /* Größere Schriftgröße */
+}
+
+.btn-block {
+  display: block;
+  width: 100%; /* Block-Element, nimmt die gesamte Breite ein */
+}
+
+/* Optionale Schatteneffekte */
+.btn-shadow {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Leichter Schatten */
+}
+
+.btn-shadow:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Tieferer Schatten bei Hover */
+}
+
+/* Deaktivierte Buttons */
+.btn-disabled,
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Anpassung für die Sidebar, damit Buttons kompakter sind */
+#areas-list .btn {
+  font-size: 0.8rem; /* Kleinere Schriftgröße */
+  padding: 0.2rem 0.5rem; /* Weniger Padding */
+  margin-right: 5px; /* Platz zwischen Buttons */
 }
