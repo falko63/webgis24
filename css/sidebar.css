@@ -92,3 +92,43 @@
   word-wrap: break-word; /* Lange Wörter umbrechen */
   box-sizing: border-box; /* Verhindert, dass Padding die Breite beeinflusst */
 }
+
+/* Eingabefeld für Gebietsnamen */
+#areas-list input {
+  font-size: 14px;
+  margin-right: 10px;
+}
+
+/* Löschen-Button */
+#areas-list button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#areas-list button:hover {
+  background-color: darkred;
+}
+
+/* Tooltip Styling */
+.tooltip {
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.7
+  ); /* Schwarzer, halbtransparenter Hintergrund */
+  color: white; /* Weißer Text */
+  padding: 5px 10px; /* Innenabstand für bessere Lesbarkeit */
+  border-radius: 5px; /* Abgerundete Ecken */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); /* Schatten für bessere Sichtbarkeit */
+  font-size: 12px; /* Kleinere Schriftgröße */
+  white-space: nowrap; /* Verhindert Zeilenumbruch */
+  display: none; /* Versteckt den Tooltip standardmäßig */
+  position: absolute; /* Absolute Positionierung für den Tooltip */
+  z-index: 10; /* Höherer Z-Index für Sichtbarkeit über anderen Elementen */
+  pointer-events: none; /* Verhindert, dass der Tooltip anklickbar ist */
+}
