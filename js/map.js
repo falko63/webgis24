@@ -7,8 +7,6 @@ import { fromLonLat } from "ol/proj";
 import { BASELAYER } from "./baselayer";
 import { TRANSPORT } from "./transport";
 
-import { Vector as VectorLayer } from "ol/layer";
-
 import { overlay } from "./popup";
 
 const start_center = fromLonLat([10.005, 53.54]);

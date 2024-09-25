@@ -55,7 +55,7 @@
 }
 
 .infobar h1 {
-  font-size: 1.5em;
+  font-size: 1.2em; /* Schriftgröße leicht verringern */
   border-bottom: 2px solid #f1f1f1;
   margin-right: 20px;
 }
@@ -68,15 +68,16 @@
 
 /* Gezeichnete Gebiete */
 #drawn-areas {
-  width: 20%; /* Gleiche Breite wie die Sidebar */
+  width: 250px; /* Breite für den Bereich gezeichneter Gebiete */
   background-color: #666666; /* Gleiche Hintergrundfarbe wie Sidebar */
   padding: 10px; /* Padding für Abstand */
   color: #f1f1f1; /* Textfarbe wie in der Sidebar */
+  display: block;
 }
 
 #areas-list {
   color: black;
-  font-size: 16px;
+  font-size: 14px; /* Schriftgröße für gezeichnete Gebiete kleiner */
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -84,7 +85,7 @@
 
 #areas-list li {
   margin-bottom: 10px;
-  padding: 10px;
+  padding: 5px;
   background-color: #eeeeee; /* Hintergrund für Listenitems */
   border: 1px solid #ccc; /* Leichte Umrandung */
   border-radius: 5px; /* Runde Ecken */

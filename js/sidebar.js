@@ -24,7 +24,11 @@ function info(bar) {
   if (bar === "draw") {
     if (drawInteraction === null) {
       enableDraw(); // Zeichnen aktivieren
-      console.log("Zeichenfunktion aktiviert.");
+
+      // Stelle sicher, dass der Bereich für gezeichnete Gebiete sichtbar wird
+      const drawnAreas = document.getElementById("drawn-areas");
+      drawnAreas.style.display = "block"; // Sichtbar machen
+      console.log("Zeichenfunktion aktiviert und drawn-areas sichtbar.");
     }
   }
 }
