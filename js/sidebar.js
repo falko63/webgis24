@@ -1,4 +1,5 @@
 import { enableDraw } from "./draw.js"; // Importiere nur die Zeichenfunktion
+import { loadPolygonsFromDB } from "./polygon_sidebar.js"; // Importiere die Funktion zum Laden von Polygonen
 import { map } from "./map.js"; // Stelle sicher, dass wir auf die Karte zugreifen können
 
 let openBar = undefined;
@@ -27,12 +28,23 @@ function info(bar) {
       console.log("Zeichenfunktion aktiviert und drawn-areas sichtbar.");
     }
   }
+
+  // Polygon-Liste laden, wenn der 'polygon-sidebar'-Button gewählt wurde
+  if (bar === "polygon-sidebar") {
+    loadPolygonsFromDB(); // Lade gespeicherte Polygone
+    console.log("Polygon-Sidebar geöffnet und Polygone geladen.");
+  }
 }
 
-window.info = info; // Globale Funktion
+window.info = info; // Globale Funktion für das Öffnen der Sidebars
 
 function infoOpen(bar) {
-  document.getElementById(bar).classList.add("infobar_open"); // Sidebar öffnen
+  // Schließe zunächst alle anderen geöffneten Sidebars
+  infoCloseAll();
+
+  // Zeige die entsprechende Sidebar an
+  document.getElementById(bar).style.display = "block"; // Sichtbar machen
+  document.getElementById(bar).classList.add("infobar_open");
   document.getElementById("main").classList.add("with-sidebar"); // Kartenbreite anpassen
   openBar = bar;
 }
@@ -42,6 +54,7 @@ function infoCloseAll() {
   let bars = document.getElementsByClassName("infobar");
   for (let bar of bars) {
     bar.classList.remove("infobar_open");
+    bar.style.display = "none"; // Unsichtbar machen
   }
 
   // Setze die Karte auf volle Breite zurück
@@ -57,4 +70,4 @@ function infoCloseAll() {
   openBar = undefined;
 }
 
-window.infoCloseAll = infoCloseAll;
+window.infoCloseAll = infoCloseAll; // Globale Funktion zum Schließen aller Sidebars

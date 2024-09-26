@@ -5,6 +5,7 @@ import { Style, Fill, Stroke, Text } from "ol/style";
 import { Overlay } from "ol";
 import Collection from "ol/Collection";
 import { map } from "./map.js";
+import GeoJSON from "ol/format/GeoJSON";
 
 let areas = [];
 let drawSource = null;
@@ -64,11 +65,13 @@ export function enableDraw() {
       };
       areas.push(areaObject);
 
+      console.log("Aktualisiertes Areas-Array:", areas); // Debugging-Ausgabe
+
       // Aktualisiere die Sidebar mit den neuen Gebieten
-      updateSidebar();
+      updateDrawSidebar();
 
       // Optional: Button für das Speichern hinzufügen
-      createSaveButton(areaObject); // Rufe die Funktion zum Erstellen des Buttons auf
+      createSaveButton(areaObject);
     }
   });
 
@@ -134,7 +137,7 @@ function enableModifyForFeature(feature) {
       const foundArea = areas.find((areaObj) => areaObj.feature === feature);
       if (foundArea) {
         foundArea.areaInHectares = areaInHectares;
-        updateSidebar();
+        updateDrawSidebar();
       }
 
       console.log("Polygon bearbeitet:", feature);
@@ -145,7 +148,7 @@ function enableModifyForFeature(feature) {
 function deleteFeature(area) {
   drawSource.removeFeature(area.feature);
   areas = areas.filter((a) => a !== area);
-  updateSidebar();
+  updateDrawSidebar();
 }
 
 // Funktion zum Erstellen des Buttons zum Speichern
@@ -162,7 +165,7 @@ function createSaveButton(polygon) {
   saveButton.textContent = "Polygon speichern";
   saveButton.classList.add("btn", "btn-success");
 
-  // Füge den Button der Sidebar hinzu (oder einem anderen Bereich)
+  // Füge den Button der Sidebar hinzu (Zeichnen Sidebar)
   const sidebar = document.getElementById("drawn-areas");
   sidebar.appendChild(saveButton);
 
@@ -175,13 +178,16 @@ function createSaveButton(polygon) {
 
 // Funktion zum Speichern des Polygons in der Datenbank
 function savePolygonToDB(polygon) {
+  const geoJsonFormat = new GeoJSON();
+  const geometry = geoJsonFormat.writeGeometry(polygon.feature.getGeometry()); // Speichere als GeoJSON
+
   const data = {
     name: polygon.name,
     area: polygon.areaInHectares,
-    geometry: polygon.feature.getGeometry().getCoordinates(), // Koordinaten
+    geometry: geometry, // GeoJSON-Koordinaten speichern
   };
 
-  fetch("http://127.0.0.1:5000/api/polygons", {
+  fetch("http://127.0.0.1:5000/api/polygon", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -199,12 +205,13 @@ function savePolygonToDB(polygon) {
     });
 }
 
-function updateSidebar() {
-  const areasList = document.getElementById("areas-list");
+// Funktion zum Aktualisieren der Sidebar mit den gezeichneten Gebieten
+function updateDrawSidebar() {
+  console.log("updateDrawSidebar wird aufgerufen"); // Debugging-Ausgabe
+  const areasList = document.getElementById("drawn-areas-list"); // Verwende die Liste für gezeichnete Gebiete
 
-  // Stelle sicher, dass das Element "areas-list" existiert
   if (!areasList) {
-    console.error("Element 'areas-list' nicht gefunden!");
+    console.error("Element 'drawn-areas-list' nicht gefunden!");
     return;
   }
 

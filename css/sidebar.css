@@ -132,3 +132,25 @@
   z-index: 10; /* Höherer Z-Index für Sichtbarkeit über anderen Elementen */
   pointer-events: none; /* Verhindert, dass der Tooltip anklickbar ist */
 }
+
+#polygon-sidebar {
+  width: 250px;
+  background-color: #666666;
+  padding: 10px;
+  color: #ffffff;
+  display: none; /* Standardmäßig versteckt */
+}
+
+#polygon-sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+#polygon-sidebar li {
+  margin-bottom: 10px;
+  padding: 5px;
+  background-color: #eeeeee;
+  color: #000;
+  border-radius: 5px;
+  cursor: pointer;
+}

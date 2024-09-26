@@ -11,4 +11,5 @@ import "./js/sidebar";
 import "./js/coordinates";
 import "./js/geolocation";
 import "./js/draw";
+import "./js/polygon_sidebar";
 import "./js/map";
