@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS  # Importiere CORS
 from dotenv import load_dotenv
 import os
 
@@ -8,11 +9,12 @@ load_dotenv()
 
 app = Flask(__name__)
 
+# CORS für die App aktivieren
+CORS(app)
+
 # Verwende die Umgebungsvariable für die Datenbank-URI
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-
 
 db = SQLAlchemy(app)
 
@@ -21,7 +23,7 @@ class Polygon(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     area = db.Column(db.Float, nullable=False)
-    geometry = db.Column(db.String, nullable=False)  # Geometrie als WKT (Well-known Text)
+    geometry = db.Column(db.String, nullable=False)
 
     def to_dict(self):
         return {
@@ -40,22 +42,21 @@ def get_polygons():
 # Route zum Hinzufügen eines neuen Polygons
 @app.route('/api/polygons', methods=['POST'])
 def add_polygon():
-    data = request.get_json()  # JSON-Daten aus der Anfrage extrahieren
+    data = request.get_json()
     name = data.get('name')
     area = data.get('area')
     geometry = data.get('geometry')
 
-    # Neues Polygon erstellen
     new_polygon = Polygon(name=name, area=area, geometry=geometry)
     db.session.add(new_polygon)
     db.session.commit()
 
     return jsonify({'message': 'Polygon erfolgreich hinzugefügt!'}), 201
 
-# Basis-Route hinzufügen
+# Basis-Route
 @app.route('/')
 def index():
-    return "Willkommen bei der Polygon API! Verwende /api/polygons, um die API aufzurufen."
+    return "Willkommen bei der Polygon API!"
 
 if __name__ == '__main__':
     app.run(debug=True)

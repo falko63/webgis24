@@ -10,7 +10,7 @@ let areas = [];
 let drawSource = null;
 let modify = null;
 const MAX_AREA_HECTARES = 1000;
-let drawInteraction = null; // Zeichnen-Interaktion, um sie global verfügbar zu machen
+let drawInteraction = null; // Zeicheninteraktion global verfügbar machen
 
 // Funktion zum Zeichnen von Polygonen
 export function enableDraw() {
@@ -42,32 +42,33 @@ export function enableDraw() {
     type: "Polygon",
   });
 
-  map.addInteraction(drawInteraction); // Speichert die Zeicheninteraktion
+  map.addInteraction(drawInteraction);
 
+  // Zeichnen abgeschlossen
   drawInteraction.on("drawend", function (event) {
     const drawnFeature = event.feature;
     const area = drawnFeature.getGeometry().getArea();
     const areaInHectares = area / 10000;
 
-    console.log("Fläche des Polygons in Hektar:", areaInHectares);
-
     if (areaInHectares > MAX_AREA_HECTARES) {
       alert(`Das Gebiet ist zu groß. Maximal ${MAX_AREA_HECTARES} Hektar.`);
       setTimeout(() => {
         drawSource.removeFeature(drawnFeature);
-        console.log("Zu großes Gebiet entfernt.");
       }, 100);
     } else {
-      const coordinates = drawnFeature.getGeometry().getCoordinates()[0];
       const areaObject = {
         areaInHectares,
-        coordinates,
+        coordinates: drawnFeature.getGeometry().getCoordinates(),
         name: `Gebiet ${areas.length + 1}`,
         feature: drawnFeature,
       };
       areas.push(areaObject);
-      console.log("Gezeichnetes Gebiet hinzugefügt:", areaObject);
+
+      // Aktualisiere die Sidebar mit den neuen Gebieten
       updateSidebar();
+
+      // Optional: Button für das Speichern hinzufügen
+      createSaveButton(areaObject); // Rufe die Funktion zum Erstellen des Buttons auf
     }
   });
 
@@ -108,11 +109,6 @@ export function enableDraw() {
   });
 }
 
-// Funktion zum Abrufen der Zeichnen-Interaktion
-export function getDrawInteraction() {
-  return drawInteraction; // Gib die Zeicheninteraktion zurück
-}
-
 // Funktion zur Aktivierung des Modify-Modus für ein Gebiet
 function enableModifyForFeature(feature) {
   if (modify) {
@@ -127,20 +123,18 @@ function enableModifyForFeature(feature) {
 
   modify.on("modifyend", function () {
     const area = feature.getGeometry().getArea();
-    const areaInHectares = area / 10000; // Umrechnung in Hektar
+    const areaInHectares = area / 10000;
 
-    // Überprüfen, ob das bearbeitete Gebiet zu groß ist
     if (areaInHectares > MAX_AREA_HECTARES) {
       alert(
         `Das bearbeitete Gebiet ist zu groß. Maximal ${MAX_AREA_HECTARES} Hektar.`
       );
-      modify.undo(); // Setzt die letzte Bearbeitung zurück, wenn die Fläche zu groß ist
+      modify.undo();
     } else {
-      // Suche das bearbeitete Gebiet und aktualisiere die Fläche
       const foundArea = areas.find((areaObj) => areaObj.feature === feature);
       if (foundArea) {
-        foundArea.areaInHectares = areaInHectares; // Aktualisiere die Fläche
-        updateSidebar(); // Aktualisiere die Sidebar, um die neue Fläche anzuzeigen
+        foundArea.areaInHectares = areaInHectares;
+        updateSidebar();
       }
 
       console.log("Polygon bearbeitet:", feature);
@@ -154,13 +148,72 @@ function deleteFeature(area) {
   updateSidebar();
 }
 
+// Funktion zum Erstellen des Buttons zum Speichern
+function createSaveButton(polygon) {
+  // Stelle sicher, dass der Button nur einmal erstellt wird
+  let existingButton = document.getElementById("save-polygon-btn");
+  if (existingButton) {
+    existingButton.remove(); // Entferne den alten Button, falls vorhanden
+  }
+
+  // Button erstellen
+  const saveButton = document.createElement("button");
+  saveButton.id = "save-polygon-btn"; // Gib dem Button eine eindeutige ID
+  saveButton.textContent = "Polygon speichern";
+  saveButton.classList.add("btn", "btn-success");
+
+  // Füge den Button der Sidebar hinzu (oder einem anderen Bereich)
+  const sidebar = document.getElementById("drawn-areas");
+  sidebar.appendChild(saveButton);
+
+  // Event für das Speichern des Polygons in der DB
+  saveButton.onclick = function () {
+    savePolygonToDB(polygon);
+    saveButton.remove(); // Entferne den Button nach dem Speichern
+  };
+}
+
+// Funktion zum Speichern des Polygons in der Datenbank
+function savePolygonToDB(polygon) {
+  const data = {
+    name: polygon.name,
+    area: polygon.areaInHectares,
+    geometry: polygon.feature.getGeometry().getCoordinates(), // Koordinaten
+  };
+
+  fetch("http://127.0.0.1:5000/api/polygons", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Erfolgreich gespeichert:", data);
+      alert("Polygon erfolgreich in der Datenbank gespeichert.");
+    })
+    .catch((error) => {
+      console.error("Fehler beim Speichern:", error);
+      alert("Fehler beim Speichern des Polygons in der Datenbank.");
+    });
+}
+
 function updateSidebar() {
   const areasList = document.getElementById("areas-list");
-  areasList.innerHTML = "";
+
+  // Stelle sicher, dass das Element "areas-list" existiert
+  if (!areasList) {
+    console.error("Element 'areas-list' nicht gefunden!");
+    return;
+  }
+
+  areasList.innerHTML = ""; // Leere die Liste zuerst
 
   areas.forEach((area, index) => {
     const listItem = document.createElement("li");
 
+    // Nameingabe für das Gebiet
     const input = document.createElement("input");
     input.type = "text";
     input.value = area.name;
@@ -168,6 +221,7 @@ function updateSidebar() {
       area.name = input.value;
     };
 
+    // Bearbeiten-Button
     const modifyButton = document.createElement("button");
     modifyButton.textContent = "Bearbeiten";
     modifyButton.classList.add("btn", "btn-primary");
@@ -175,6 +229,7 @@ function updateSidebar() {
       enableModifyForFeature(area.feature);
     };
 
+    // Löschen-Button
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Löschen";
     deleteButton.classList.add("btn", "btn-danger");
@@ -189,6 +244,6 @@ function updateSidebar() {
       document.createTextNode(`: ${area.areaInHectares.toFixed(2)} Hektar`)
     );
 
-    areasList.appendChild(listItem);
+    areasList.appendChild(listItem); // Füge den Eintrag zur Liste hinzu
   });
 }

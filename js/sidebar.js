@@ -1,4 +1,4 @@
-import { enableDraw, getDrawInteraction } from "./draw.js"; // Importiere die Zeichenfunktion und hole die Zeicheninteraktion
+import { enableDraw } from "./draw.js"; // Importiere nur die Zeichenfunktion
 import { map } from "./map.js"; // Stelle sicher, dass wir auf die Karte zugreifen können
 
 let openBar = undefined;
@@ -24,11 +24,6 @@ function info(bar) {
   if (bar === "draw") {
     if (drawInteraction === null) {
       enableDraw(); // Zeichnen aktivieren
-      drawInteraction = getDrawInteraction(); // Speichere die Zeicheninteraktion
-
-      // Stelle sicher, dass der Bereich für gezeichnete Gebiete sichtbar wird
-      const drawnAreas = document.getElementById("drawn-areas");
-      drawnAreas.style.display = "block"; // Sichtbar machen
       console.log("Zeichenfunktion aktiviert und drawn-areas sichtbar.");
     }
   }
