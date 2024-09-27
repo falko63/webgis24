@@ -58,9 +58,9 @@ export function loadPolygonsFromDB() {
         // Sichtbarkeit des Polygons steuern
         checkbox.onchange = () => {
           if (checkbox.checked) {
-            addPolygonToMap(polygon.geometry);
+            addPolygonToMap(polygon); // Füge das Polygon hinzu
           } else {
-            removePolygonFromMap(polygon.geometry);
+            removePolygonFromMap(polygon.id); // Entferne das Polygon
           }
         };
 
@@ -72,43 +72,38 @@ export function loadPolygonsFromDB() {
     });
 }
 
-function addPolygonToMap(geojson) {
-  const polygonFeature = new GeoJSON().readFeature(geojson, {
-    dataProjection: "EPSG:3857", // Die Daten liegen in EPSG:3857 vor
-    featureProjection: "EPSG:3857", // Die Karte verwendet ebenfalls EPSG:3857
+let polygonLayers = {}; // Dictionary zum Speichern der Layer
+
+function addPolygonToMap(polygon) {
+  const polygonFeature = new GeoJSON().readFeature(polygon.geometry, {
+    featureProjection: "EPSG:3857", // Kartenprojektion
   });
 
+  // Erstelle einen neuen Layer für das Polygon
   const vectorLayer = new VectorLayer({
     source: new VectorSource({
       features: [polygonFeature],
     }),
   });
 
+  // Füge den Layer zur Karte hinzu
   map.addLayer(vectorLayer);
+
+  // Speichere den Layer unter der Polygon-ID
+  polygonLayers[polygon.id] = vectorLayer;
 }
 
-function removePolygonFromMap(geometry) {
-  const layersToRemove = [];
+function removePolygonFromMap(polygonId) {
+  // Finde den Layer im Dictionary
+  const layerToRemove = polygonLayers[polygonId];
 
-  map.getLayers().forEach(function (layer) {
-    if (layer instanceof VectorLayer) {
-      const source = layer.getSource();
-      if (source) {
-        source.getFeatures().forEach(function (feature) {
-          if (
-            feature.getGeometry().getCoordinates().toString() ===
-            geometry.toString()
-          ) {
-            layersToRemove.push(layer);
-          }
-        });
-      }
-    }
-  });
-
-  layersToRemove.forEach(function (layer) {
-    map.removeLayer(layer);
-  });
+  if (layerToRemove) {
+    map.removeLayer(layerToRemove); // Entferne den Layer von der Karte
+    delete polygonLayers[polygonId]; // Lösche den Layer aus dem Dictionary
+    console.log("Layer entfernt:", polygonId); // Debugging-Log
+  } else {
+    console.error("Layer nicht gefunden für Polygon-ID:", polygonId);
+  }
 }
 
 function zoomToPolygon(feature) {
