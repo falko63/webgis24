@@ -1,11 +1,9 @@
-import { map_events } from "./map_events";
 import { createLayerPanel } from "./layerpanel";
 
 import { Map, View } from "ol";
 import { fromLonLat, get as getProjection } from "ol/proj"; // Sicherstellen, dass die Projektion korrekt verwendet wird
 
 import { BASELAYER } from "./baselayer";
-import { TRANSPORT } from "./transport";
 
 import { overlay } from "./popup";
 
@@ -24,10 +22,6 @@ export let map = new Map({
 });
 
 map.addLayer(BASELAYER);
-map.addLayer(TRANSPORT);
-
-// Map Events (z.B. für Interaktionen oder Klicks)
-map_events(map);
 
 // Layer erzeugen
-createLayerPanel("baselayer", [BASELAYER, TRANSPORT]);
+createLayerPanel("baselayer", [BASELAYER]);

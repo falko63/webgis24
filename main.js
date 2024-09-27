@@ -8,8 +8,7 @@ import "./css/popup.css";
 import "./css/buttons.css";
 
 import "./js/sidebar";
-import "./js/coordinates";
-import "./js/geolocation";
+
 import "./js/draw";
 import "./js/polygon_sidebar";
 import "./js/map";
