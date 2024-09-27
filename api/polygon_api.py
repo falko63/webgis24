@@ -1,9 +1,9 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask_cors import CORS  # CORS importieren
 from dotenv import load_dotenv
 import os
-from sqlalchemy import text  # Importiere Text für rohe SQL-Abfragen
+from sqlalchemy import text
 
 # Lade Umgebungsvariablen aus der .env-Datei
 load_dotenv()
@@ -47,7 +47,7 @@ def get_polygons():
     return jsonify({'polygons': polygons})
 
 # Route zum Hinzufügen eines neuen Polygons (POST)
-@app.route('/api/polygons', methods=['POST'])
+@app.route('/api/polygon', methods=['POST'])
 def add_polygon():
     data = request.get_json()
     name = data.get('name')

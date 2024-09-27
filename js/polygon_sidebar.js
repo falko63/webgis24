@@ -25,6 +25,9 @@ export function loadPolygonsFromDB() {
       sidebarList.innerHTML = ""; // Leere die Liste zuerst
 
       polygons.forEach((polygon) => {
+        // Debugging: GeoJSON-Daten ausgeben
+        console.log("GeoJSON-Daten: ", polygon.geometry);
+
         const listItem = document.createElement("li");
         listItem.innerHTML = `
           <input type="checkbox" id="checkbox-${polygon.id}" />
@@ -39,10 +42,17 @@ export function loadPolygonsFromDB() {
 
         // Füge eine Klickaktion zum Zoomen hinzu
         zoomButton.onclick = () => {
-          const geojson = new GeoJSON().readFeature(polygon.geometry, {
-            featureProjection: "EPSG:3857", // Pass die Projektion an
-          });
-          zoomToPolygon(geojson);
+          try {
+            console.log("GeoJSON-Daten vor dem Zoom:", polygon.geometry);
+            const geojson = new GeoJSON().readFeature(polygon.geometry, {
+              dataProjection: "EPSG:4326",
+              featureProjection: "EPSG:3857",
+            });
+            console.log("Feature nach dem Lesen des GeoJSON:", geojson);
+            zoomToPolygon(geojson);
+          } catch (error) {
+            console.error("Fehler beim Lesen der GeoJSON-Daten:", error);
+          }
         };
 
         // Sichtbarkeit des Polygons steuern
@@ -64,7 +74,8 @@ export function loadPolygonsFromDB() {
 
 function addPolygonToMap(geojson) {
   const polygonFeature = new GeoJSON().readFeature(geojson, {
-    featureProjection: "EPSG:3857",
+    dataProjection: "EPSG:3857", // Die Daten liegen in EPSG:3857 vor
+    featureProjection: "EPSG:3857", // Die Karte verwendet ebenfalls EPSG:3857
   });
 
   const vectorLayer = new VectorLayer({
@@ -76,28 +87,44 @@ function addPolygonToMap(geojson) {
   map.addLayer(vectorLayer);
 }
 
-function removePolygonFromMap(geojson) {
-  const polygonFeature = new GeoJSON().readFeature(geojson, {
-    featureProjection: "EPSG:3857",
-  });
+function removePolygonFromMap(geometry) {
+  const layersToRemove = [];
 
   map.getLayers().forEach(function (layer) {
-    const source = layer.getSource();
-    if (source && source instanceof VectorSource) {
-      source.getFeatures().forEach(function (feature) {
-        if (
-          feature.getGeometry().getCoordinates().toString() ===
-          polygonFeature.getGeometry().getCoordinates().toString()
-        ) {
-          source.removeFeature(feature);
-        }
-      });
+    if (layer instanceof VectorLayer) {
+      const source = layer.getSource();
+      if (source) {
+        source.getFeatures().forEach(function (feature) {
+          if (
+            feature.getGeometry().getCoordinates().toString() ===
+            geometry.toString()
+          ) {
+            layersToRemove.push(layer);
+          }
+        });
+      }
     }
+  });
+
+  layersToRemove.forEach(function (layer) {
+    map.removeLayer(layer);
   });
 }
 
 function zoomToPolygon(feature) {
-  map.getView().fit(feature.getGeometry().getExtent(), {
-    duration: 1000,
-  });
+  const geometry = feature.getGeometry();
+
+  // Prüfe, ob die Geometrie existiert und nicht leer ist
+  if (!geometry || geometry.getExtent().every(isNaN)) {
+    console.error("Ungültige oder leere Geometrie:", geometry);
+    return;
+  }
+
+  const extent = geometry.getExtent();
+  if (!extent || extent.length === 0) {
+    console.error("Leerer oder ungültiger Extent:", extent);
+    return;
+  }
+
+  map.getView().fit(extent, { duration: 1000 });
 }

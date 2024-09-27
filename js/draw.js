@@ -6,6 +6,7 @@ import { Overlay } from "ol";
 import Collection from "ol/Collection";
 import { map } from "./map.js";
 import GeoJSON from "ol/format/GeoJSON";
+import { toLonLat } from "ol/proj"; // Importiere toLonLat für die Umrechnung
 
 let areas = [];
 let drawSource = null;
@@ -124,23 +125,30 @@ function enableModifyForFeature(feature) {
 
   map.addInteraction(modify);
 
-  modify.on("modifyend", function () {
-    const area = feature.getGeometry().getArea();
+  modify.on("modifyend", function (event) {
+    const modifiedFeature = event.features.getArray()[0]; // Das bearbeitete Feature
+    const area = modifiedFeature.getGeometry().getArea();
     const areaInHectares = area / 10000;
 
     if (areaInHectares > MAX_AREA_HECTARES) {
       alert(
         `Das bearbeitete Gebiet ist zu groß. Maximal ${MAX_AREA_HECTARES} Hektar.`
       );
-      modify.undo();
+      modify.undo(); // Wenn das Gebiet zu groß ist, rückgängig machen
     } else {
-      const foundArea = areas.find((areaObj) => areaObj.feature === feature);
+      // Aktualisiere die Area-Daten nach der Bearbeitung
+      const foundArea = areas.find(
+        (areaObj) => areaObj.feature === modifiedFeature
+      );
       if (foundArea) {
         foundArea.areaInHectares = areaInHectares;
-        updateDrawSidebar();
+        updateDrawSidebar(); // Sidebar neu laden
       }
 
-      console.log("Polygon bearbeitet:", feature);
+      console.log("Polygon bearbeitet:", modifiedFeature);
+
+      // Speichern-Button nach Bearbeitung neu erstellen
+      createSaveButton(foundArea); // Zeige den Speichern-Button wieder an
     }
   });
 }
@@ -153,44 +161,54 @@ function deleteFeature(area) {
 
 // Funktion zum Erstellen des Buttons zum Speichern
 function createSaveButton(polygon) {
-  // Stelle sicher, dass der Button nur einmal erstellt wird
+  // Prüfe, ob der Button bereits existiert und entferne ihn, um Duplikate zu vermeiden
   let existingButton = document.getElementById("save-polygon-btn");
   if (existingButton) {
-    existingButton.remove(); // Entferne den alten Button, falls vorhanden
+    existingButton.remove();
   }
 
   // Button erstellen
   const saveButton = document.createElement("button");
-  saveButton.id = "save-polygon-btn"; // Gib dem Button eine eindeutige ID
+  saveButton.id = "save-polygon-btn";
   saveButton.textContent = "Polygon speichern";
   saveButton.classList.add("btn", "btn-success");
 
   // Füge den Button der Sidebar hinzu (Zeichnen Sidebar)
-  const sidebar = document.getElementById("drawn-areas");
-  sidebar.appendChild(saveButton);
+  const sidebar = document.getElementById("drawn-areas-list"); // Achte darauf, dass drawn-areas-list existiert
+  if (sidebar) {
+    sidebar.appendChild(saveButton);
+  } else {
+    console.error("Element 'drawn-areas-list' nicht gefunden.");
+  }
 
   // Event für das Speichern des Polygons in der DB
   saveButton.onclick = function () {
     savePolygonToDB(polygon);
-    saveButton.remove(); // Entferne den Button nach dem Speichern
+    saveButton.remove(); // Button nach dem Speichern entfernen
   };
 }
 
 // Funktion zum Speichern des Polygons in der Datenbank
 function savePolygonToDB(polygon) {
   const geoJsonFormat = new GeoJSON();
-  const geometry = geoJsonFormat.writeGeometry(polygon.feature.getGeometry()); // Speichere als GeoJSON
+
+  // Transformiere die Koordinaten von EPSG:3857 (Kartenprojektion) nach EPSG:4326 (WGS84)
+  const geometry = geoJsonFormat.writeGeometry(polygon.feature.getGeometry(), {
+    dataProjection: "EPSG:4326", // Zielprojektion für die Speicherung in der DB (WGS84)
+    featureProjection: "EPSG:3857", // Projektion der Zeichnung in der Karte (Web Mercator)
+  });
 
   const data = {
     name: polygon.name,
     area: polygon.areaInHectares,
-    geometry: geometry, // GeoJSON-Koordinaten speichern
+    geometry: geometry, // GeoJSON-Koordinaten speichern in EPSG:4326
   };
 
   fetch("http://127.0.0.1:5000/api/polygon", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*", // Dieser Header sorgt dafür, dass die Anfrage erlaubt wird
     },
     body: JSON.stringify(data),
   })
