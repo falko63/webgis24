@@ -1,19 +1,22 @@
 import ee
+import os
 from dotenv import load_dotenv
 
-
-"""
-Login daten für gee:
-email:falko.behre97@gmail.com
-pw: Petr0siliu$63
-"""
-
+# Lade Umgebungsvariablen aus der .env-Datei
 load_dotenv()
-# Initialisiere Earth Engine
-ee.Initialize()
+
+# Der Service Account und der Pfad zur JSON-Datei
+service_account = os.getenv('GEE_SERVICE_ACCOUNT')  # Füge deine Service Account E-Mail in die .env-Datei ein
+json_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')  # Der Pfad zur JSON-Datei in der .env
+
+# Erstelle die Anmeldedaten mit dem Service Account
+credentials = ee.ServiceAccountCredentials(service_account, json_path)
+
+# Initialisiere Earth Engine mit den Service Account Credentials
+ee.Initialize(credentials)
 
 # Erstelle ein Polygon für das Analysegebiet
-polygon = ee.Geometry.Polygon([[
+polygon = ee.Geometry.Polygon([[ 
     [9.956775885, 53.559507401],
     [9.959945694, 53.555424443],
     [9.969054722, 53.559190292],
@@ -28,11 +31,8 @@ sentinel2 = ee.ImageCollection('COPERNICUS/S2') \
     .median() \
     .clip(polygon)
 
-# Berechne den NDVI (Normalised Difference Vegetation Index)
+# Berechne den NDVI (Normalized Difference Vegetation Index)
 ndvi = sentinel2.normalizedDifference(['B8', 'B4']).rename('NDVI')
-
-# Visualisierungseinstellungen
-ndvi_params = {'min': 0, 'max': 1, 'palette': ['blue', 'white', 'green']}
 
 # Erzeuge eine URL zur Visualisierung
 url = ndvi.getThumbURL({'region': polygon.getInfo(), 'min': 0, 'max': 1, 'dimensions': 512})
