@@ -35,10 +35,14 @@ export function loadPolygonsFromDB() {
           polygon.name
         } (${polygon.area.toFixed(2)} Hektar)</label>
           <button id="zoom-${polygon.id}">Zoom</button>
+          <button id="analyze-${
+            polygon.id
+          }">Analyse</button> <!-- Neuer Analyse-Button -->
         `;
 
         const checkbox = listItem.querySelector(`#checkbox-${polygon.id}`);
         const zoomButton = listItem.querySelector(`#zoom-${polygon.id}`);
+        const analyzeButton = listItem.querySelector(`#analyze-${polygon.id}`); // Referenz auf den Analyse-Button
 
         // Füge eine Klickaktion zum Zoomen hinzu
         zoomButton.onclick = () => {
@@ -53,6 +57,11 @@ export function loadPolygonsFromDB() {
           } catch (error) {
             console.error("Fehler beim Lesen der GeoJSON-Daten:", error);
           }
+        };
+
+        // Füge die Analyse-Funktion zum Button hinzu
+        analyzeButton.onclick = () => {
+          start_analyze_polygon(polygon.geometry); // Funktion für die Analyse aufrufen
         };
 
         // Sichtbarkeit des Polygons steuern
@@ -122,4 +131,10 @@ function zoomToPolygon(feature) {
   }
 
   map.getView().fit(extent, { duration: 1000 });
+}
+
+// Funktion für die Analyse umbenannt
+function start_analyze_polygon(geometry) {
+  console.log("Analyse für das Polygon mit Geometrie:", geometry);
+  // Hier kannst du die Logik zur Analyse implementieren
 }

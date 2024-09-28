@@ -1,10 +1,11 @@
+
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from sqlalchemy import text
-from gee import analyze_area  # GEE-Skript importieren
+# from gee import analyze_area  # GEE-Skript importieren
 
 # Lade Umgebungsvariablen aus der .env-Datei
 load_dotenv()
