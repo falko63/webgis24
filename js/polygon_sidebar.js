@@ -7,8 +7,8 @@ import "ol/ol.css"; // Stylesheets laden
 import { Image as ImageLayer } from "ol/layer"; // Hier bereits als ImageLayer importiert
 import { ImageStatic as ImageStaticSource } from "ol/source"; // Hier bereits als ImageStaticSource importiert
 
-let ndviLayer, eviLayer, saviLayer;
-let ndviUrl, eviUrl, saviUrl; // To store the URLs returned from the server
+let ndviLayer, ndmiLayer, laigreenLayer;
+let ndviUrl, ndmiUrl, laigreenUrl; // To store the URLs returned from the server
 
 // Funktion zum Abrufen und Anzeigen der Polygone in der Sidebar
 export function loadPolygonsFromDB() {
@@ -42,13 +42,13 @@ export function loadPolygonsFromDB() {
         )} Hektar)</label>
   <button id="zoom-${polygon.id}">Zoom</button>
   <button id="analyze-${polygon.id}">Analyse</button>
-  <!-- Checkboxen für NDVI, EVI und SAVI -->
+  <!-- Checkboxen für NDVI, ndmi und laigreen -->
   <label for="ndvi-toggle-${polygon.id}">NDVI</label>
   <input type="checkbox" id="ndvi-toggle-${polygon.id}" disabled />
-  <label for="evi-toggle-${polygon.id}">EVI</label>
-  <input type="checkbox" id="evi-toggle-${polygon.id}" disabled />
-  <label for="savi-toggle-${polygon.id}">SAVI</label>
-  <input type="checkbox" id="savi-toggle-${polygon.id}" disabled />
+  <label for="ndmi-toggle-${polygon.id}">ndmi</label>
+  <input type="checkbox" id="ndmi-toggle-${polygon.id}" disabled />
+  <label for="laigreen-toggle-${polygon.id}">laigreen</label>
+  <input type="checkbox" id="laigreen-toggle-${polygon.id}" disabled />
 `;
 
         const checkbox = listItem.querySelector(`#checkbox-${polygon.id}`);
@@ -146,8 +146,8 @@ function zoomToPolygon(feature) {
 
 document.addEventListener("DOMContentLoaded", function () {
   const ndviCheckbox = document.getElementById("ndvi-toggle");
-  const eviCheckbox = document.getElementById("evi-toggle");
-  const saviCheckbox = document.getElementById("savi-toggle");
+  const ndmiCheckbox = document.getElementById("ndmi-toggle");
+  const laigreenCheckbox = document.getElementById("laigreen-toggle");
 
   if (ndviCheckbox) {
     ndviCheckbox.style.display = "block"; // Stelle sicher, dass die Checkbox angezeigt wird
@@ -155,16 +155,16 @@ document.addEventListener("DOMContentLoaded", function () {
     console.error("NDVI-Checkbox nicht gefunden!");
   }
 
-  if (eviCheckbox) {
-    eviCheckbox.style.display = "block"; // Stelle sicher, dass die Checkbox angezeigt wird
+  if (ndmiCheckbox) {
+    ndmiCheckbox.style.display = "block"; // Stelle sicher, dass die Checkbox angezeigt wird
   } else {
-    console.error("EVI-Checkbox nicht gefunden!");
+    console.error("ndmi-Checkbox nicht gefunden!");
   }
 
-  if (saviCheckbox) {
-    saviCheckbox.style.display = "block"; // Stelle sicher, dass die Checkbox angezeigt wird
+  if (laigreenCheckbox) {
+    laigreenCheckbox.style.display = "block"; // Stelle sicher, dass die Checkbox angezeigt wird
   } else {
-    console.error("SAVI-Checkbox nicht gefunden!");
+    console.error("laigreen-Checkbox nicht gefunden!");
   }
 });
 
@@ -215,8 +215,10 @@ function start_analyze_polygon(geometry, polygonId) {
 
       // Enable the analysis tools and attach event listeners
       const ndviCheckbox = document.getElementById(`ndvi-toggle-${polygonId}`);
-      const eviCheckbox = document.getElementById(`evi-toggle-${polygonId}`);
-      const saviCheckbox = document.getElementById(`savi-toggle-${polygonId}`);
+      const ndmiCheckbox = document.getElementById(`ndmi-toggle-${polygonId}`);
+      const laigreenCheckbox = document.getElementById(
+        `laigreen-toggle-${polygonId}`
+      );
 
       if (ndviCheckbox) {
         ndviCheckbox.disabled = false;
@@ -224,16 +226,21 @@ function start_analyze_polygon(geometry, polygonId) {
           toggleLayer(ndviCheckbox, data.ndvi_url, "NDVI", imageExtent);
       }
 
-      if (eviCheckbox) {
-        eviCheckbox.disabled = false;
-        eviCheckbox.onchange = () =>
-          toggleLayer(eviCheckbox, data.evi_url, "EVI", imageExtent);
+      if (ndmiCheckbox) {
+        ndmiCheckbox.disabled = false;
+        ndmiCheckbox.onchange = () =>
+          toggleLayer(ndmiCheckbox, data.ndmi_url, "ndmi", imageExtent);
       }
 
-      if (saviCheckbox) {
-        saviCheckbox.disabled = false;
-        saviCheckbox.onchange = () =>
-          toggleLayer(saviCheckbox, data.savi_url, "SAVI", imageExtent);
+      if (laigreenCheckbox) {
+        laigreenCheckbox.disabled = false;
+        laigreenCheckbox.onchange = () =>
+          toggleLayer(
+            laigreenCheckbox,
+            data.laigreen_url,
+            "laigreen",
+            imageExtent
+          );
       }
     })
     .catch((error) => {

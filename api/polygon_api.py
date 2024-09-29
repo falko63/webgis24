@@ -95,18 +95,19 @@ def process_area():
     
     try:
         geometry = ee.Geometry(geometry)
-        # Fetch images for NDVI, EVI, and SAVI
+        # Fetch images for NDVI, ndmi, and laigreen
         ndvi_expression = '(B8 - B4) / (B8 + B4)'
-        evi_expression = '2.5 * ((B8 - B4) / (B8 + 6 * B4 - 7.5 * B2 + 1))'
-        savi_expression = '(B8 - B4) * (1.5) / (B8 + B4 + 0.5)'
+        ndmi_expression = '2.5 * ((B8 - B4) / (B8 + 6 * B4 - 7.5 * B2 + 1))'
+        laigreen_expression = '(B8 - B4) * (1.5) / (B8 + B4 + 0.5)'
 
-        ndvi_palette = ['blue', 'white', 'green']
-        evi_palette = ['blue', 'white', 'yellow']
-        savi_palette = ['yellow', 'white', 'green']
+        ndvi_palette = ['#000000', '#a50026', '#d73027', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850', '#006837']  # Updated palette
+        ndmi_palette = ['#d73027', '#f46d43', '#fdae61', '#fee08b', '#ffffbf', '#d9ef8b', '#a6d96a', '#66bd63', '#1a9850']  # Updated palette
+        laigreen_palette = ['#8c510a', '#d8b365', '#f6e8c3', '#c7eae5', '#5ab4ac', '#01665e']  # Updated palette
+
 
         ndvi_min_max = [0, 1]
-        evi_min_max = [0, 1]
-        savi_min_max = [0, 1]
+        ndmi_min_max = [0, 1]
+        laigreen_min_max = [0, 1]
         
         # Fetch Sentinel-2 images
         sentinel2 = ee.ImageCollection('COPERNICUS/S2_HARMONIZED') \
@@ -116,11 +117,11 @@ def process_area():
             .first()
 
         ndvi_url = generate_visualization_url(sentinel2, ndvi_expression, ndvi_palette, ndvi_min_max, geometry)
-        evi_url = generate_visualization_url(sentinel2, evi_expression, evi_palette, evi_min_max, geometry)
-        savi_url = generate_visualization_url(sentinel2, savi_expression, savi_palette, savi_min_max, geometry)
+        ndmi_url = generate_visualization_url(sentinel2, ndmi_expression, ndmi_palette, ndmi_min_max, geometry)
+        laigreen_url = generate_visualization_url(sentinel2, laigreen_expression, laigreen_palette, laigreen_min_max, geometry)
 
 
-        return jsonify({'ndvi_url': ndvi_url, 'evi_url': evi_url, 'savi_url': savi_url})
+        return jsonify({'ndvi_url': ndvi_url, 'ndmi_url': ndmi_url, 'laigreen_url': laigreen_url})
     except Exception as e:
         # Log the error and return a 500 response with the error message
         print(f"Error during GEE analysis: {e}")
@@ -137,7 +138,7 @@ def generate_visualization_url(image, index_expression, palette, min_max, geomet
         'B11': image.select('B11')
     }
     
-    # Apply the index expression to the image (e.g., NDVI, EVI, etc.)
+    # Apply the index expression to the image (e.g., NDVI, ndmi, etc.)
     index_image = image.expression(index_expression, bands).rename('index')
     
     # Convert the fetched geometry (GeoJSON) into an ee.Geometry object for GEE processing

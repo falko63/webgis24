@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="images/webgis.svg" type="image/svg+xml" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=dndmice-width, initial-scale=1.0" />
     <title>WebGIS 2024</title>
 
     <!-- OpenLayers Stylesheet -->
@@ -14,6 +14,9 @@
 
     <!-- Custom Buttons Stylesheet -->
     <link rel="stylesheet" href="css/buttons.css" />
+
+    <!-- Legend Stylesheet -->
+    <link rel="stylesheet" href="css/legend.css" />
   </head>
 
   <body>
@@ -70,6 +73,51 @@
     <!-- Hauptkarte -->
     <div id="main" class="main">
       <div id="map" class="map"></div>
+    </div>
+
+    <!-- Legende -->
+    <div class="legend">
+      <h3>Legende</h3>
+      <h4>NDVI</h4>
+      <ul>
+        <li><span style="background-color: #000000"></span> &lt; -0.2</li>
+        <li><span style="background-color: #a50026"></span> -0.2 - 0</li>
+        <li><span style="background-color: #d73027"></span> 0 - 0.1</li>
+        <li><span style="background-color: #f46d43"></span> 0.1 - 0.2</li>
+        <li><span style="background-color: #fdae61"></span> 0.2 - 0.3</li>
+        <li><span style="background-color: #fee08b"></span> 0.3 - 0.4</li>
+        <li><span style="background-color: #ffffbf"></span> 0.4 - 0.5</li>
+        <li><span style="background-color: #d9ef8b"></span> 0.5 - 0.6</li>
+        <li><span style="background-color: #a6d96a"></span> 0.6 - 0.7</li>
+        <li><span style="background-color: #66bd63"></span> 0.7 - 0.8</li>
+        <li><span style="background-color: #1a9850"></span> 0.8 - 0.9</li>
+        <li><span style="background-color: #006837"></span> > 0.9</li>
+      </ul>
+      <!-- Weitere Abschnitte für andere Indizes wie ndmi und laigreen hier -->
+      <!-- NDMI Section -->
+      <h4>NDMI</h4>
+      <ul>
+        <li><span style="background-color: #d73027"></span> &lt; -0.2</li>
+        <li><span style="background-color: #f46d43"></span> -0.2 - 0</li>
+        <li><span style="background-color: #fdae61"></span> 0 - 0.1</li>
+        <li><span style="background-color: #fee08b"></span> 0.1 - 0.2</li>
+        <li><span style="background-color: #ffffbf"></span> 0.2 - 0.3</li>
+        <li><span style="background-color: #d9ef8b"></span> 0.3 - 0.4</li>
+        <li><span style="background-color: #a6d96a"></span> 0.4 - 0.5</li>
+        <li><span style="background-color: #66bd63"></span> 0.5 - 0.6</li>
+        <li><span style="background-color: #1a9850"></span> > 0.6</li>
+      </ul>
+
+      <!-- LAI Green Section -->
+      <h4>LAI Green</h4>
+      <ul>
+        <li><span style="background-color: #8c510a"></span> 0 - 0.5</li>
+        <li><span style="background-color: #d8b365"></span> 0.5 - 1.5</li>
+        <li><span style="background-color: #f6e8c3"></span> 1.5 - 2.5</li>
+        <li><span style="background-color: #c7eae5"></span> 2.5 - 4.0</li>
+        <li><span style="background-color: #5ab4ac"></span> 4.0 - 5.0</li>
+        <li><span style="background-color: #01665e"></span> > 5.0</li>
+      </ul>
     </div>
 
     <!-- Script -->
