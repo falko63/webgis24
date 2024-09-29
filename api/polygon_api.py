@@ -13,7 +13,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # CORS für die gesamte App aktivieren
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 # Verwende die Umgebungsvariable für die Datenbank-URI
@@ -84,20 +84,70 @@ credentials = ee.ServiceAccountCredentials(service_account, json_path)
 # Initialisiere Earth Engine mit den Service Account Credentials
 ee.Initialize(credentials)
 
-# Route zum Verarbeiten von Gebieten
+
 @app.route('/api/process_area', methods=['POST'])
 def process_area():
-    print("Verarbeite Gebiet...")
-    data = request.json
-    print("Empfange Daten:", data)
-    coordinates = data.get('coordinates')
-    if not coordinates:
-        print("Fehler: Keine Koordinaten angegeben")
-        return jsonify({'error': 'Keine Koordinaten angegeben'}), 400
+    data = request.json  # Check if JSON data is received
+    geometry = data.get('geometry')  # Extract coordinates from JSON
     
-    # Hier kannst du die GEE-Analyse oder andere Logik hinzufügen
+    if not geometry:
+        return jsonify({'error': 'No coordinates provided'}), 400  # Return 400 if no geometry or coordinates are found
+    
+    try:
+        geometry = ee.Geometry(geometry)
+        # Your GEE logic goes here, ensure that the GEE API is correctly set up
+        ndvi_expression = '(B8 - B4) / (B8 + B4)'
+        ndvi_palette = ['blue', 'white', 'green']
+        ndvi_min_max = [0, 1]  # NDVI range
+        
+        # Fetch Sentinel-2 images
+        sentinel2 = ee.ImageCollection('COPERNICUS/S2') \
+            .filterBounds(ee.Geometry(geometry)) \
+            .filterDate('2021-01-01', '2021-12-31') \
+            .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
+            .median()
 
-    return jsonify({"message": "Analyse erfolgreich!"})
+        # Generate visualization URL
+        visualization_url = generate_visualization_url(
+            sentinel2, 
+            ndvi_expression, 
+            ndvi_palette, 
+            ndvi_min_max, 
+            geometry
+        )
+
+        return jsonify({'url': visualization_url})
+    except Exception as e:
+        # Log the error and return a 500 response with the error message
+        print(f"Error during GEE analysis: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+def generate_visualization_url(image, index_expression, palette, min_max, geometry, dimensions=512):
+    # Create dictionary of Sentinel-2 bands to be used in the index expression
+    bands = {
+        'B2': image.select('B2'), 'B3': image.select('B3'),
+        'B4': image.select('B4'), 'B5': image.select('B5'),
+        'B6': image.select('B6'), 'B7': image.select('B7'),
+        'B8': image.select('B8'), 'B8a': image.select('B8A'),
+        'B11': image.select('B11')
+    }
+    
+    # Apply the index expression to the image (e.g., NDVI, EVI, etc.)
+    index_image = image.expression(index_expression, bands).rename('index')
+    
+    # Convert the fetched geometry (GeoJSON) into an ee.Geometry object for GEE processing
+    aoi = ee.Geometry(geometry)
+    
+    # Generate the visualization URL using the index image and geometry (AOI)
+    url = index_image.getThumbURL({
+        'min': min_max[0], 'max': min_max[1], 
+        'dimensions': dimensions, 
+        'palette': palette, 
+        'region': aoi  # Use the geometry's coordinates for the region
+    })
+    
+    return url
 
 # Basis-Route
 @app.route('/')

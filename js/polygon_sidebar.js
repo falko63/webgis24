@@ -134,23 +134,28 @@ function zoomToPolygon(feature) {
 }
 
 function start_analyze_polygon(geometry) {
-  // Show the entire GeoJSON object
-  console.log("Analyse für das Polygon mit Geometrie:", geometry);
-
-  // Check if the geometry object and its coordinates exist
-  if (geometry && geometry) {
-    console.log("Koordinaten des Polygons:", geometry);
-  } else {
-    console.error(
-      "Koordinaten sind nicht vorhanden oder das Geometrie-Objekt ist ungültig"
-    );
-    return; // Exit if no valid coordinates
+  // Überprüfen, ob die Geometrie ein String ist und parse es, falls nötig
+  if (typeof geometry === "string") {
+    try {
+      geometry = JSON.parse(geometry); // Parse den String zu einem JSON-Objekt
+    } catch (error) {
+      console.error("Fehler beim Parsen der Geometrie:", error);
+      return; // Abbrechen, wenn das Parsen fehlschlägt
+    }
   }
 
-  // Post data to the server
+  // Überprüfen, ob die Geometrie jetzt korrekt ist
+  if (!geometry || !geometry.type || !geometry.coordinates) {
+    console.error("Ungültige Geometrie:", geometry);
+    return;
+  }
+
+  // Post-Daten korrekt formatieren
   const postData = {
-    coordinates: geometry,
+    geometry: geometry, // Verwende die korrekt geparste Geometrie
   };
+
+  console.log("Sende Daten an Server:", postData);
 
   // Make sure the URL is correct, and it should match the Flask API route
   fetch("http://127.0.0.1:5000/api/process_area", {
