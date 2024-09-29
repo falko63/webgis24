@@ -3,6 +3,9 @@ import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
+import "ol/ol.css"; // Stylesheets laden
+import { Image as ImageLayer } from "ol/layer"; // Hier bereits als ImageLayer importiert
+import { ImageStatic as ImageStaticSource } from "ol/source"; // Hier bereits als ImageStaticSource importiert
 
 // Funktion zum Abrufen und Anzeigen der Polygone in der Sidebar
 export function loadPolygonsFromDB() {
@@ -133,37 +136,35 @@ function zoomToPolygon(feature) {
   map.getView().fit(extent, { duration: 1000 });
 }
 
+// Funktion zum Starten der Analyse
 function start_analyze_polygon(geometry) {
-  // Überprüfen, ob die Geometrie ein String ist und parse es, falls nötig
+  // Geometrie-Parsing, falls notwendig
   if (typeof geometry === "string") {
     try {
-      geometry = JSON.parse(geometry); // Parse den String zu einem JSON-Objekt
+      geometry = JSON.parse(geometry);
     } catch (error) {
       console.error("Fehler beim Parsen der Geometrie:", error);
-      return; // Abbrechen, wenn das Parsen fehlschlägt
+      return;
     }
   }
 
-  // Überprüfen, ob die Geometrie jetzt korrekt ist
   if (!geometry || !geometry.type || !geometry.coordinates) {
     console.error("Ungültige Geometrie:", geometry);
     return;
   }
 
-  // Post-Daten korrekt formatieren
   const postData = {
-    geometry: geometry, // Verwende die korrekt geparste Geometrie
+    geometry: geometry,
   };
 
   console.log("Sende Daten an Server:", postData);
 
-  // Make sure the URL is correct, and it should match the Flask API route
   fetch("http://127.0.0.1:5000/api/process_area", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(postData), // Convert the coordinates to JSON
+    body: JSON.stringify(postData),
   })
     .then((response) => {
       if (!response.ok) {
@@ -173,7 +174,26 @@ function start_analyze_polygon(geometry) {
     })
     .then((data) => {
       console.log("Erfolgreich:", data);
-      // Add any logic to handle the returned data
+      if (data.url) {
+        // Berechne den Extent basierend auf dem Polygon
+        const geojsonFormat = new GeoJSON();
+        const polygonFeature = geojsonFormat.readFeature(geometry, {
+          dataProjection: "EPSG:4326",
+          featureProjection: "EPSG:3857",
+        });
+        const imageExtent = polygonFeature.getGeometry().getExtent(); // Hier der Extent des Polygons
+
+        const imageLayer = new ImageLayer({
+          source: new ImageStaticSource({
+            url: data.url,
+            imageExtent: imageExtent,
+            projection: map.getView().getProjection(), // Sicherstellen, dass die Projektion passt
+          }),
+        });
+
+        map.addLayer(imageLayer);
+        console.log("Bild zur Karte hinzugefügt!");
+      }
     })
     .catch((error) => {
       console.error("Fehler bei der Analyse:", error);

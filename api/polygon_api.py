@@ -101,7 +101,7 @@ def process_area():
         ndvi_min_max = [0, 1]  # NDVI range
         
         # Fetch Sentinel-2 images
-        sentinel2 = ee.ImageCollection('COPERNICUS/S2') \
+        sentinel2 = ee.ImageCollection('COPERNICUS/S2_HARMONIZED') \
             .filterBounds(ee.Geometry(geometry)) \
             .filterDate('2021-01-01', '2021-12-31') \
             .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
