@@ -95,28 +95,32 @@ def process_area():
     
     try:
         geometry = ee.Geometry(geometry)
-        # Your GEE logic goes here, ensure that the GEE API is correctly set up
+        # Fetch images for NDVI, EVI, and SAVI
         ndvi_expression = '(B8 - B4) / (B8 + B4)'
+        evi_expression = '2.5 * ((B8 - B4) / (B8 + 6 * B4 - 7.5 * B2 + 1))'
+        savi_expression = '(B8 - B4) * (1.5) / (B8 + B4 + 0.5)'
+
         ndvi_palette = ['blue', 'white', 'green']
-        ndvi_min_max = [0, 1]  # NDVI range
+        evi_palette = ['blue', 'white', 'yellow']
+        savi_palette = ['yellow', 'white', 'green']
+
+        ndvi_min_max = [0, 1]
+        evi_min_max = [0, 1]
+        savi_min_max = [0, 1]
         
         # Fetch Sentinel-2 images
         sentinel2 = ee.ImageCollection('COPERNICUS/S2_HARMONIZED') \
             .filterBounds(ee.Geometry(geometry)) \
-            .filterDate('2021-01-01', '2021-12-31') \
             .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20)) \
-            .median()
+            .sort('system:time_start', False) \
+            .first()
 
-        # Generate visualization URL
-        visualization_url = generate_visualization_url(
-            sentinel2, 
-            ndvi_expression, 
-            ndvi_palette, 
-            ndvi_min_max, 
-            geometry
-        )
+        ndvi_url = generate_visualization_url(sentinel2, ndvi_expression, ndvi_palette, ndvi_min_max, geometry)
+        evi_url = generate_visualization_url(sentinel2, evi_expression, evi_palette, evi_min_max, geometry)
+        savi_url = generate_visualization_url(sentinel2, savi_expression, savi_palette, savi_min_max, geometry)
 
-        return jsonify({'url': visualization_url})
+
+        return jsonify({'ndvi_url': ndvi_url, 'evi_url': evi_url, 'savi_url': savi_url})
     except Exception as e:
         # Log the error and return a 500 response with the error message
         print(f"Error during GEE analysis: {e}")

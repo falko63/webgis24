@@ -7,6 +7,9 @@ import "ol/ol.css"; // Stylesheets laden
 import { Image as ImageLayer } from "ol/layer"; // Hier bereits als ImageLayer importiert
 import { ImageStatic as ImageStaticSource } from "ol/source"; // Hier bereits als ImageStaticSource importiert
 
+let ndviLayer, eviLayer, saviLayer;
+let ndviUrl, eviUrl, saviUrl; // To store the URLs returned from the server
+
 // Funktion zum Abrufen und Anzeigen der Polygone in der Sidebar
 export function loadPolygonsFromDB() {
   fetch("http://127.0.0.1:5000/api/polygons", {
@@ -33,19 +36,24 @@ export function loadPolygonsFromDB() {
 
         const listItem = document.createElement("li");
         listItem.innerHTML = `
-          <input type="checkbox" id="checkbox-${polygon.id}" />
-          <label for="checkbox-${polygon.id}">${
-          polygon.name
-        } (${polygon.area.toFixed(2)} Hektar)</label>
-          <button id="zoom-${polygon.id}">Zoom</button>
-          <button id="analyze-${
-            polygon.id
-          }">Analyse</button> <!-- Neuer Analyse-Button -->
-        `;
+  <input type="checkbox" id="checkbox-${polygon.id}" />
+  <label for="checkbox-${polygon.id}">${polygon.name} (${polygon.area.toFixed(
+          2
+        )} Hektar)</label>
+  <button id="zoom-${polygon.id}">Zoom</button>
+  <button id="analyze-${polygon.id}">Analyse</button>
+  <!-- Checkboxen für NDVI, EVI und SAVI -->
+  <label for="ndvi-toggle-${polygon.id}">NDVI</label>
+  <input type="checkbox" id="ndvi-toggle-${polygon.id}" disabled />
+  <label for="evi-toggle-${polygon.id}">EVI</label>
+  <input type="checkbox" id="evi-toggle-${polygon.id}" disabled />
+  <label for="savi-toggle-${polygon.id}">SAVI</label>
+  <input type="checkbox" id="savi-toggle-${polygon.id}" disabled />
+`;
 
         const checkbox = listItem.querySelector(`#checkbox-${polygon.id}`);
         const zoomButton = listItem.querySelector(`#zoom-${polygon.id}`);
-        const analyzeButton = listItem.querySelector(`#analyze-${polygon.id}`); // Referenz auf den Analyse-Button
+        const analyzeButton = listItem.querySelector(`#analyze-${polygon.id}`);
 
         // Füge eine Klickaktion zum Zoomen hinzu
         zoomButton.onclick = () => {
@@ -64,7 +72,7 @@ export function loadPolygonsFromDB() {
 
         // Füge die Analyse-Funktion zum Button hinzu
         analyzeButton.onclick = () => {
-          start_analyze_polygon(polygon.geometry); // Funktion für die Analyse aufrufen
+          start_analyze_polygon(polygon.geometry, polygon.id); // Funktion für die Analyse aufrufen
         };
 
         // Sichtbarkeit des Polygons steuern
@@ -136,9 +144,32 @@ function zoomToPolygon(feature) {
   map.getView().fit(extent, { duration: 1000 });
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  const ndviCheckbox = document.getElementById("ndvi-toggle");
+  const eviCheckbox = document.getElementById("evi-toggle");
+  const saviCheckbox = document.getElementById("savi-toggle");
+
+  if (ndviCheckbox) {
+    ndviCheckbox.style.display = "block"; // Stelle sicher, dass die Checkbox angezeigt wird
+  } else {
+    console.error("NDVI-Checkbox nicht gefunden!");
+  }
+
+  if (eviCheckbox) {
+    eviCheckbox.style.display = "block"; // Stelle sicher, dass die Checkbox angezeigt wird
+  } else {
+    console.error("EVI-Checkbox nicht gefunden!");
+  }
+
+  if (saviCheckbox) {
+    saviCheckbox.style.display = "block"; // Stelle sicher, dass die Checkbox angezeigt wird
+  } else {
+    console.error("SAVI-Checkbox nicht gefunden!");
+  }
+});
+
 // Funktion zum Starten der Analyse
-function start_analyze_polygon(geometry) {
-  // Geometrie-Parsing, falls notwendig
+function start_analyze_polygon(geometry, polygonId) {
   if (typeof geometry === "string") {
     try {
       geometry = JSON.parse(geometry);
@@ -174,28 +205,66 @@ function start_analyze_polygon(geometry) {
     })
     .then((data) => {
       console.log("Erfolgreich:", data);
-      if (data.url) {
-        // Berechne den Extent basierend auf dem Polygon
-        const geojsonFormat = new GeoJSON();
-        const polygonFeature = geojsonFormat.readFeature(geometry, {
-          dataProjection: "EPSG:4326",
-          featureProjection: "EPSG:3857",
-        });
-        const imageExtent = polygonFeature.getGeometry().getExtent(); // Hier der Extent des Polygons
 
-        const imageLayer = new ImageLayer({
-          source: new ImageStaticSource({
-            url: data.url,
-            imageExtent: imageExtent,
-            projection: map.getView().getProjection(), // Sicherstellen, dass die Projektion passt
-          }),
-        });
+      const geojsonFormat = new GeoJSON();
+      const polygonFeature = geojsonFormat.readFeature(geometry, {
+        dataProjection: "EPSG:4326",
+        featureProjection: "EPSG:3857",
+      });
+      const imageExtent = polygonFeature.getGeometry().getExtent(); // Calculate the correct extent
 
-        map.addLayer(imageLayer);
-        console.log("Bild zur Karte hinzugefügt!");
+      // Enable the analysis tools and attach event listeners
+      const ndviCheckbox = document.getElementById(`ndvi-toggle-${polygonId}`);
+      const eviCheckbox = document.getElementById(`evi-toggle-${polygonId}`);
+      const saviCheckbox = document.getElementById(`savi-toggle-${polygonId}`);
+
+      if (ndviCheckbox) {
+        ndviCheckbox.disabled = false;
+        ndviCheckbox.onchange = () =>
+          toggleLayer(ndviCheckbox, data.ndvi_url, "NDVI", imageExtent);
+      }
+
+      if (eviCheckbox) {
+        eviCheckbox.disabled = false;
+        eviCheckbox.onchange = () =>
+          toggleLayer(eviCheckbox, data.evi_url, "EVI", imageExtent);
+      }
+
+      if (saviCheckbox) {
+        saviCheckbox.disabled = false;
+        saviCheckbox.onchange = () =>
+          toggleLayer(saviCheckbox, data.savi_url, "SAVI", imageExtent);
       }
     })
     .catch((error) => {
       console.error("Fehler bei der Analyse:", error);
     });
+}
+
+// Global variables to hold the layers
+let activeLayers = {};
+
+// Function to toggle layers based on the checkbox state
+function toggleLayer(checkbox, url, layerType, imageExtent) {
+  if (checkbox.checked) {
+    if (!activeLayers[layerType]) {
+      const imageLayer = new ImageLayer({
+        source: new ImageStaticSource({
+          url: url,
+          imageExtent: imageExtent, // Use the correct extent
+          projection: map.getView().getProjection(),
+        }),
+      });
+      map.addLayer(imageLayer);
+      activeLayers[layerType] = imageLayer; // Save the reference to the layer
+      console.log(`${layerType} Layer hinzugefügt.`);
+    }
+  } else {
+    // Remove the layer when the checkbox is unchecked
+    if (activeLayers[layerType]) {
+      map.removeLayer(activeLayers[layerType]);
+      delete activeLayers[layerType]; // Remove the reference
+      console.log(`${layerType} Layer entfernt.`);
+    }
+  }
 }
