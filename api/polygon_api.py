@@ -5,7 +5,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 from sqlalchemy import text
-# from gee import analyze_area  # GEE-Skript importieren
+
 
 # Lade Umgebungsvariablen aus der .env-Datei
 load_dotenv()
@@ -13,7 +13,8 @@ load_dotenv()
 app = Flask(__name__)
 
 # CORS für die gesamte App aktivieren
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+
 
 # Verwende die Umgebungsvariable für die Datenbank-URI
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
@@ -48,34 +49,6 @@ def get_polygons():
 
     return jsonify({'polygons': polygons})
 
-# Route für die GEE-Analyse eines ausgewählten Polygons
-@app.route('/api/analyze', methods=['POST'])
-def analyze_polygon():
-    data = request.json
-    polygon_id = data.get('polygon_id')
-
-    if not polygon_id:
-        return jsonify({'error': 'Polygon-ID fehlt'}), 400
-
-    # Hole das Polygon aus der Datenbank
-    query = """
-        SELECT ST_AsGeoJSON(geometry) as geometry
-        FROM polygon WHERE id = :polygon_id;
-    """
-    result = db.session.execute(text(query), {'polygon_id': polygon_id}).fetchone()
-
-    if not result:
-        return jsonify({'error': 'Polygon nicht gefunden'}), 404
-
-    geometry = result.geometry
-
-    try:
-        # Führe die GEE-Analyse mit dem Polygon aus
-        analysis_result = analyze_area(geometry)  # Aus gee.py
-        return jsonify(analysis_result)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
 # Route zum Hinzufügen eines neuen Polygons (POST)
 @app.route('/api/polygon', methods=['POST'])
 def add_polygon():
@@ -93,6 +66,38 @@ def add_polygon():
     db.session.commit()
 
     return jsonify({'message': 'Polygon erfolgreich hinzugefügt!'}), 201
+
+
+import ee
+from dotenv import load_dotenv
+
+# Lade Umgebungsvariablen aus der .env-Datei
+load_dotenv()
+
+# Der Service Account und der Pfad zur JSON-Datei
+service_account = os.getenv('GEE_SERVICE_ACCOUNT')
+json_path = os.getenv('GOOGLE_APPLICATION_CREDENTIALS')
+
+# Erstelle die Anmeldedaten mit dem Service Account
+credentials = ee.ServiceAccountCredentials(service_account, json_path)
+
+# Initialisiere Earth Engine mit den Service Account Credentials
+ee.Initialize(credentials)
+
+# Route zum Verarbeiten von Gebieten
+@app.route('/api/process_area', methods=['POST'])
+def process_area():
+    print("Verarbeite Gebiet...")
+    data = request.json
+    print("Empfange Daten:", data)
+    coordinates = data.get('coordinates')
+    if not coordinates:
+        print("Fehler: Keine Koordinaten angegeben")
+        return jsonify({'error': 'Keine Koordinaten angegeben'}), 400
+    
+    # Hier kannst du die GEE-Analyse oder andere Logik hinzufügen
+
+    return jsonify({"message": "Analyse erfolgreich!"})
 
 # Basis-Route
 @app.route('/')

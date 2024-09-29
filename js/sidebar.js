@@ -1,6 +1,6 @@
 import { enableDraw } from "./draw.js"; // Importiere nur die Zeichenfunktion
 import { loadPolygonsFromDB } from "./polygon_sidebar.js"; // Importiere die Funktion zum Laden von Polygonen
-import { map } from "./map.js"; // Stelle sicher, dass wir auf die Karte zugreifen können
+import { map } from "./map.js"; // Stelle sicher, dass wir auf die Karte zugreifen könne
 
 let openBar = undefined;
 let drawInteraction = null; // Halte die Interaktion, um sie zu entfernen, wenn die Sidebar geschlossen wird

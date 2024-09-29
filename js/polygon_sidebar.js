@@ -133,8 +133,44 @@ function zoomToPolygon(feature) {
   map.getView().fit(extent, { duration: 1000 });
 }
 
-// Funktion für die Analyse umbenannt
 function start_analyze_polygon(geometry) {
+  // Show the entire GeoJSON object
   console.log("Analyse für das Polygon mit Geometrie:", geometry);
-  // Hier kannst du die Logik zur Analyse implementieren
+
+  // Check if the geometry object and its coordinates exist
+  if (geometry && geometry) {
+    console.log("Koordinaten des Polygons:", geometry);
+  } else {
+    console.error(
+      "Koordinaten sind nicht vorhanden oder das Geometrie-Objekt ist ungültig"
+    );
+    return; // Exit if no valid coordinates
+  }
+
+  // Post data to the server
+  const postData = {
+    coordinates: geometry,
+  };
+
+  // Make sure the URL is correct, and it should match the Flask API route
+  fetch("http://127.0.0.1:5000/api/process_area", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(postData), // Convert the coordinates to JSON
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Server response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log("Erfolgreich:", data);
+      // Add any logic to handle the returned data
+    })
+    .catch((error) => {
+      console.error("Fehler bei der Analyse:", error);
+    });
 }
