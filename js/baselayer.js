@@ -19,45 +19,7 @@ const OSM_Map = new TileLayer({
 
 // --------------------------------------------------------------------------------------
 
-const topplus_response = await fetch(
-  "https://sgx.geodatenzentrum.de/wmts_topplus_web_open/1.0.0/WMTSCapabilities.xml"
-);
-const topplus_text = await topplus_response.text();
-let topplus_result = parser.read(topplus_text);
 
-const WMTS_TopPlusOpen = new TileLayer({
-  id: "WMTS_topplusDE",
-  title: "WMTS TopPlusOpen DE",
-  type: "base",
-  visible: false,
-  source: new WMTS(
-    optionsFromCapabilities(topplus_result, {
-      layer: "web",
-      matrixSet: "WEBMERCATOR",
-    })
-  ),
-});
-
-// --------------------------------------------------------------------------------------
-
-const basemapde_response = await fetch(
-  "https://sgx.geodatenzentrum.de/wmts_basemapde/1.0.0/WMTSCapabilities.xml"
-);
-const basemapde_text = await basemapde_response.text();
-let basemapde_result = parser.read(basemapde_text);
-
-const WMTS_BasemapDE = new TileLayer({
-  id: "WMTS_BasemapDE",
-  title: "WMTS Basemap DE",
-  type: "base",
-  visible: false,
-  source: new WMTS(
-    optionsFromCapabilities(basemapde_result, {
-      layer: "de_basemapde_web_raster_farbe",
-      matrixSet: "GLOBAL_WEBMERCATOR",
-    })
-  ),
-});
 
 // --------------------------------------------------------------------------------------
 // Neuer Satelliten-Layer von ArcGIS
@@ -78,7 +40,6 @@ export const BASELAYER = new Group({
   title: "Basiskarten",
   layers: [
     OSM_Map,
-    WMTS_BasemapDE,
     ArcGIS_World_Imagery, // Satelliten-Layer hinzufügen
   ],
 });

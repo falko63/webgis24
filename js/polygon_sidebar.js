@@ -1,5 +1,4 @@
 import { map } from "./map";
-import Feature from "ol/Feature";
 import GeoJSON from "ol/format/GeoJSON";
 import { Vector as VectorLayer } from "ol/layer";
 import { Vector as VectorSource } from "ol/source";
@@ -7,8 +6,7 @@ import "ol/ol.css"; // Stylesheets laden
 import { Image as ImageLayer } from "ol/layer"; // Hier bereits als ImageLayer importiert
 import { ImageStatic as ImageStaticSource } from "ol/source"; // Hier bereits als ImageStaticSource importiert
 
-let ndviLayer, ndmiLayer, laigreenLayer;
-let ndviUrl, ndmiUrl, laigreenUrl; // To store the URLs returned from the server
+
 
 // Funktion zum Abrufen und Anzeigen der Polygone in der Sidebar
 export function loadPolygonsFromDB() {
